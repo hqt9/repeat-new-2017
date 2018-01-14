@@ -1,0 +1,324 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('css/opcheckout.css') ?>"> 
+
+<script type="text/javascript" src="<?php echo $this->getJsUrl('varien/accordion.js') ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/opcheckout.js') ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/opcheckout_rwd.js') ?>"></script>
+
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/lib/jquery.customSelect.min.js') ?>"></script>
+<script type="text/javascript">
+    $j(function() {
+        function wrapSelect(elem){
+            $j(elem).customSelect();
+            $j(elem).css('font-size','16px');
+        }
+
+        $j('.opc').on('change', 'select',function(){
+            var section = $j(this).closest('.section');
+            var selects = section.find('select');
+            selects.each(function(i,item){
+                var elem = $j(item);
+                var p = elem.parent();
+                if(elem.css('display')=== 'none'){
+                    p.css('display','none')
+                }else{
+                    p.css('display','inherit')
+                }
+            })
+        });
+
+        $j('.step-title').on('click',function(){
+            var section = $j(this).closest('.section');
+            var selects = section.find('select');
+            selects.each(function(i,item){
+                var elem = $j(item);
+                wrapSelect(elem);
+                var p = elem.parent();
+                if(elem.css('display')=== 'none'){
+                    p.css('display','none')
+                }else{
+                    p.css('display','inherit')
+                }
+            })
+        });
+
+        $j('.step-back .btn-back').on('click',function(){
+            $j('.page').removeClass('open-step')
+        });
+        $j('.step-back .btn-done').on('click',function(){
+            var btn = $j(this).closest('.section').find('.button-next');
+            if(btn[0] && !btn[0].disabled){
+                btn.click();
+            }
+        });
+    });
+</script>
+
+<?php $grandTotal = Mage::helper('checkout')->formatPrice(Mage::getModel('checkout/cart')->getQuote()->getGrandTotal()); ?>
+
+<div class="order-total">Order total: <?php echo $grandTotal; ?></div>
+
+<ol class="opc opc-firststep-<?php echo $this->getActiveStep() ?>" id="checkoutSteps">
+<?php $i=0; foreach($this->getSteps() as $_stepId => $_stepInfo): ?>
+<?php if (!$this->getChild($_stepId) || !$this->getChild($_stepId)->isShow()): continue; endif; $i++ ?>
+    <li id="opc-<?php echo $_stepId ?>" class="section<?php echo !empty($_stepInfo['allow'])?' allow':'' ?><?php echo !empty($_stepInfo['complete'])?' saved':'' ?>">
+        <div class="step-title">
+            <span class="number"><?php echo $i ?>.</span>
+            <h2><?php echo $_stepInfo['label'] ?></h2>
+            <div class="step-result"></div>
+            <div class="icon-box">
+                <span class="finished"><i class="icon-check iconfont"></i></span>
+                <span class="unfinished"><i class="icon-right iconfont"></i></span>
+            </div>
+        </div>
+        <div id="checkout-step-<?php echo $_stepId ?>" class="step a-item">
+            <div class="step-back">
+                <div class="btn-back fl"><i class="iconfont icon-left"></i></div>
+                <a class="btn-done fr disabled" href="#">Done</a>
+                <h2><?php echo $_stepInfo['label'] ?></h2>
+            </div>
+            <div class="step-scroll">
+                <?php echo $this->getChildHtml($_stepId) ?>
+            </div>
+        </div>
+    </li>
+<?php endforeach ?>
+</ol>
+
+<!-- checkout bottom view template: page/checkoutview.phtml -->
+<?php //echo $this->getChildHtml('checkoutview') ?>
+<script type="text/javascript">
+//<![CDATA[
+    var accordion = new Accordion('checkoutSteps', '.step-title', true);
+    var checkout = new Checkout(accordion,{
+        progress: '<?php echo $this->getUrl('checkout/onepage/progress') ?>',
+        review: '<?php echo $this->getUrl('checkout/onepage/review') ?>',
+        saveMethod: '<?php echo $this->getUrl('checkout/onepage/saveMethod') ?>',
+        failure: '<?php echo $this->getUrl('checkout/cart') ?>'}
+    );
+    <?php if($this->getActiveStep()): ?>
+        accordion.openSection('opc-<?php echo $this->getActiveStep() ?>');
+        // checkout.setMethod();
+        // accordion.openSection('opc-billing');
+    <?php endif ?>
+//]]>
+</script>
+
+
+
+
+<div class="checkout-summary">
+    <div class="sum-item">
+        <span class="iconfont icon-bag"></span>
+        <span><?php echo $_counts; ?> item</span>
+    </div>
+    <div class="review" >
+        <div class="inner">
+            <ul>
+                <?php 
+                    $_counts = Mage::getModel('checkout/cart')->getQuote()->getItemsQty();
+                    $_prices = Mage::helper('checkout')->formatPrice(Mage::getModel('checkout/cart')->getQuote()->getSubtotal());  
+                    $items = Mage::getSingleton('checkout/session')->getQuote()->getAllVisibleItems();
+                    $i = 0;
+                    foreach ($items as $item) {
+                        $i += 1;
+                        $_product  = Mage::getModel('catalog/product')->load($item->getProductId());
+                        if ($i == 6) { break; }
+                ?>
+                <li>
+                    <img src="<?php echo Mage::helper('catalog/image')->init($_product, 'thumbnail')->resize(180,288); ?>" />
+                </li>
+                <?php } ?>
+            </ul>       
+            <span><i class="iconfont icon-right"></i></span>
+        </div>
+
+        <div class="checkout-order-view step" >
+            <div class="step-back">
+                <a id="item-btn-back" href="#"><span class="iconfont icon-left fl"></span>Your orders</a>
+            </div>
+            <div class="step-scroll">
+                <div class="cart-wrapper ">
+                    <table>
+                        <tbody>
+                            <?php foreach($items as $_item) { 
+                                $qty = $_item->getQty();
+                                $_product  = Mage::getModel('catalog/product')->load($_item->getProductId());
+                                $product = Mage::getModel('catalog/product')->loadByAttribute('sku', $_item->getSku());
+                                $_color = explode(';', $product->getAttributeText('color'));
+                                $_size = $product->getAttributeText('size');
+                                $sku = $this->escapeHtml($_item->getSku());
+
+                                $productImg = Mage::helper('catalog/image')->init($_product, 'thumbnail')->resize(180,288);
+                                $productName = $product->getName();
+                                $productLink = $_product->getProductUrl();
+                                $_color_name = (isset($_color[1])) ? $_color[1] : '';
+
+                                $productPrice = Mage::helper('checkout')->formatPrice($product->getPrice());
+
+                            ?>
+                            <tr class="first odd">
+                                <td class="product-cart-image">
+                                    <a href="<?php echo $productLink; ?>" title="<?php echo $productName; ?>" class="product-image">
+                                        <img src="<?php echo $productImg; ?>" alt="<?php echo $productName; ?>">
+                                    </a>
+                                </td>
+                                <td class="product-cart-info">
+                                    <a href="#" class="btn remove">Remove</a>
+                                    <a href="#" class="btn edit">Edit</a>
+                                    <h2 class="product-name">
+                                        <a href="<?php echo $productLink; ?>"><?php echo $productName; ?></a>
+                                    </h2>
+                                    <div class="product-cart-sku">
+                                        <span>Item <?php echo $sku; ?></span>
+                                    </div>
+                                    <div class="product-cart-color">
+                                        <span><?php echo $_color_name; ?></span>
+                                    </div>
+                                    <div>
+                                        <span>Size <?php echo $_size; ?></span>
+                                    </div>
+                                    <div>
+                                        <span>Quantity <?php echo $qty; ?></span>
+                                    </div>
+                                    <div class="product-item-price">
+                                        <?php echo $productPrice; ?>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="cart-totals-wrapper">
+                    <div class="cart-totals">
+                        <div class="summary">Summary</div>
+                        <div class="sum-price">
+                            <dl class="clearfix">
+                                <dt class="fl">SubTotal</dt>
+                                <dd class="fr" ><?php echo $_prices; ?></dd>
+                                <dt class="fl">Express</dt>
+                                <dd class="fr express-prices"><span class="price">0</span></dd>
+                                <dt class="fl">Tax</dt>
+                                <dd class="fr tax-prices"><span class="price">0</span></dd>
+                            </dl>
+                            <dl class="clearfix">
+                                <dt class="fl">
+                                    <strong><span class="">GrandTotal</span></strong>
+                                </dt>
+                                <dd class="fr grand-total"><strong><span class="price"><?php echo $grandTotal; ?></span></strong></dd>
+                            </dl>
+                        </div>
+                        <button id="item-btns-back"><span>Back</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="sum-price">
+        <dl class="clearfix">
+            <dt class="fl">SubTotal</dt>
+            <dd class="fr"><?php echo $_prices; ?></dd>
+            <dt class="fl">Express</dt>
+            <dd class="fr express-prices"><span class="price">0</span></dd>
+            <dt class="fl">Tax</dt>
+            <dd class="fr tax-prices"><span class="price">0</span></dd>
+        </dl>
+        <dl class="clearfix">
+            <dt class="fl">
+                <strong><span class="">GrandTotal</span></strong>
+            </dt>
+            <dd class="fr grand-total"><strong><span class="price"><?php echo $grandTotal; ?></span></strong></dd>
+        </dl>
+    </div>
+    <div class="content"
+        <!-- copy order submit button -->
+        <div id="checkout-review-submit">    
+            <?php echo $this->getChildHtml('agreements') ?>
+            <div class="buttons-set" id="review-buttons-container">
+                <button type="submit" title="Place Order" id="review-save" class="button btn-checkout order-button" disabled="disabled" onclick="review.save();"><span><span>Order and pay</span></span></button>
+                <span class="please-wait" id="review-please-wait" style="display:none;">
+                    <img src="<?php echo $this->getSkinUrl('images/opc-ajax-loader.gif') ?>" alt="<?php echo Mage::helper('core')->quoteEscape($this->__('Submitting order information...')) ?>" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Submitting order information...')) ?>" class="v-middle" /> <?php echo $this->__('Submitting order information...') ?>
+                </span>
+                <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('content-after-place-order')->toHtml(); ?>
+                <p class="f-left"><?php echo $this->__('Forgot an Item?') ?> <a href="<?php echo $this->getUrl('checkout/cart') ?>" onclick="return confirm('<?php echo Mage::helper('core')->jsQuoteEscape($this->__('Are you sure you want to leave this page? You will need to go through the checkout steps again.')); ?>')"><?php echo $this->__('Edit Your Cart') ?></a></p>
+            </div>
+            <script type="text/javascript">
+            //<![CDATA[
+                review = new Review('<?php echo $this->getUrl('checkout/onepage/saveOrder', array('form_key' => Mage::getSingleton('core/session')->getFormKey())) ?>', '<?php echo $this->getUrl('checkout/onepage/success') ?>', $('checkout-agreements'));
+            //]]>
+            </script>
+        </div>
+    </div>
+</div>
+<div class="checkout-accept">
+    <div>
+        <p>We accept</p>
+        <ul class="">   
+            <li class="accept-li accept-li-one"></li>
+            <li class="accept-li accept-li-two"></li>
+            <li class="accept-li accept-li-three"></li>
+        </ul>
+        <p>Secure shopping</p>
+        <span class="iconfont icon-secure-lock"></span>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $j(function(){
+        $j('.checkout-summary .review .inner').on('click', function(){
+            $j('.page').scrollTop(0);
+            $j('.opc .step').css('display', 'none');
+            $j('.page').addClass('open-step');
+            $j('.checkout-summary .review .checkout-order-view').addClass('active');
+        });
+
+        $j('#item-btn-back, #item-btns-back').on('click', function(){
+            $j('.checkout-summary .review .checkout-order-view').removeClass('active');
+            $j('.page').removeClass('open-step');
+            $j('.opc .step').css('display', 'block');
+            // $j('.page').scrollTop(570);
+        });
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+

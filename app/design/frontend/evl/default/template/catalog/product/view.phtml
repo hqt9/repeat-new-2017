@@ -1,0 +1,323 @@
+<?php 
+$_helper = $this->helper('catalog/output'); 
+$_product = $this->getProduct(); 
+
+$_brand_name = $_product->getResource()->getAttribute('brand')->getFrontend()->getValue($_product);
+
+$_color = explode(';', $_product->getAttributeText('color'));
+$_color_code = (isset($_color[0])) ? $_color[0] : '';
+$_color_name = (isset($_color[1])) ? $_color[1] : '';
+
+$_quality = $_product->getResource()->getAttribute('quality')->getFrontend()->getValue($_product);
+
+$_attributes = [
+  'texture_knit', 'texture_woven', 'texture_shirt', 'neckline', 'sleeve_length', 
+  'start_end', 'closure_front', 'cutting', 'fit', 'pockets', 'leather_details',
+  'slit', 'shoulder_finishing', 'pattern', 'fancy_yarn',
+  'chest_width', 'length', 'care_info_short', 'model_wears', 'detail_1', 'detail_2',
+  'detail_3', 'detail_4', 'detail_5'
+];
+
+$_attributes_values = [];
+
+foreach ($_attributes as $_attribute) {
+  $_attributes_values[$_attribute] = $_product->getResource()->getAttribute($_attribute)->getFrontend()->getValue($_product);
+}
+$_base_sku = explode('-', $_product->getSku())[0];
+$_productCollection = Mage::getModel('catalog/product')->getCollection()
+                    ->setStoreId(Mage::app()->getStore()->getId())
+                    ->addAttributeToFilter('status', array('eq' => '1'))
+                    ->addAttributeToFilter('type_id', array('eq' => 'configurable'))
+                    ->addAttributeToFilter('sku', array('like' => '%'.$_base_sku.'%'));
+?>
+<script type="text/javascript">
+    var optionsPrice = new Product.OptionsPrice(<?php echo $this->getJsonConfig() ?>);
+</script>
+<div id="messages_product_view"><?php echo $this->getMessagesBlock()->toHtml() ?></div>
+<div class="product-view">
+    <div class="product-essential">
+        <form action="<?php echo $this->getSubmitUrl($_product, array('_secure' => $this->_isSecure())) ?>" method="post" id="product_addtocart_form"<?php if($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
+            <?php echo $this->getBlockHtml('formkey') ?>
+            <div class="no-display">
+                <input type="hidden" name="product" value="<?php echo $_product->getId() ?>" />
+                <input type="hidden" name="related_product" id="related-products-field" value="" />
+            </div>
+
+            <div class="product-img-box">
+                <div class="product-name">
+                    <h1><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></h1>
+                </div>
+                <?php echo $this->getChildHtml('media') ?>
+            </div>
+
+            <div class="brand"><?php echo $_brand_name; ?></div>
+
+            <div class="product-shop">
+                <div class="product-name">
+                    <span class="h1"><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></span>
+                </div>
+
+                <div class="product-detail">
+                    <div class="price-info">
+                        <?php echo $this->getPriceHtml($_product); ?>
+                        <?php echo $this->getChildHtml('bundle_prices') ?>
+                        <?php echo $this->getTierPriceHtml() ?>
+                    </div>
+                    <div class="sku">
+                        <label><?php echo $this->__('Item ');?></label>
+                        <span><?php echo $_product->getSku(); ?></span>
+                    </div>
+                    <div class="color">
+                        <label><?php echo $this->__('Color ');?></label>
+                        <span><?php echo $_color_name; ?></span>
+                        <ul class="clearfix">
+                        <?php
+                            foreach ($_productCollection as $value) {
+                            $product = Mage::getModel('catalog/product')->loadByAttribute('sku', $value->getsku());
+                            $color = explode(';', $product->getAttributeText('color'));
+                            $color_code = (isset($color[0])) ? $color[0] : '';
+                            $color_name = (isset($color[1])) ? $color[1] : '';
+                            $url = Mage::getUrl().$product->getUrlPath();
+                        ?>
+                            <li class="<?php if($color_name == $_color_name) { echo 'active'; } ?>">
+                                <a href="<?php echo $url; ?>" style="background-color: <?php echo $color_code; ?>" title="<?php echo $color_name; ?>"><?php echo $color_name; ?></a>
+                            </li>
+                        <?php } ?>
+                        </ul>
+                    </div>
+                </div>
+                <?php echo $this->getChildHtml('other');?>
+
+                <?php if ($_product->isSaleable() && $this->hasOptions()):?>
+                    <?php echo $this->getChildChildHtml('container1', '', true, true) ?>
+                <?php endif;?>
+                <?php echo $this->getChildHtml('alert_urls') ?>
+
+                <?php if ($_product->getShortDescription()):?>
+                    <div class="short-description">
+                        <div class="std"><?php echo $_helper->productAttribute($_product, nl2br($_product->getShortDescription()), 'short_description') ?></div>
+                    </div>
+                <?php endif;?>
+
+                <div class="extra-info">
+                    <?php echo $this->getReviewsSummaryHtml($_product, 'default', false)?>
+                    <?php echo $this->getChildHtml('product_type_availability'); ?>
+                </div>
+            </div>
+
+            <div class="bullets product-shop">
+                <ul>
+                    <li><?php echo $_brand_name ?></li>
+                    <?php if ($_attributes_values['texture_knit'] !== NULL && strlen($_attributes_values['texture_knit']) !== 0): ?>
+                    <li><?php echo $_attributes_values['texture_knit']; ?></li>
+                    <?php endif; ?>
+
+                    <?php if ($_attributes_values['texture_woven'] !== NULL && strlen($_attributes_values['texture_woven']) !== 0): ?>
+                    <li><?php echo $_attributes_values['texture_woven']; ?></li>
+                    <?php endif; ?>
+
+                    <?php if ($_attributes_values['texture_shirt'] !== NULL && strlen($_attributes_values['texture_shirt']) !== 0): ?>
+                    <li><?php echo $_attributes_values['texture_shirt']; ?></li>
+                    <?php endif; ?>
+
+                    <?php if ($_attributes_values['neckline'] !== NULL && strlen($_attributes_values['neckline']) !== 0): ?>
+                    <li><?php echo $_attributes_values['neckline']; ?></li>
+                    <?php endif; ?>
+
+                    <?php if ($_attributes_values['sleeve_length'] !== NULL && strlen($_attributes_values['sleeve_length']) !== 0): ?>
+                    <li><?php echo $_attributes_values['sleeve_length']; ?></li>
+                    <?php endif; ?>
+
+                    <?php if ($_attributes_values['start_end'] !== NULL && strlen($_attributes_values['start_end']) !== 0): ?>
+                    <li><?php echo $_attributes_values['start_end']; ?></li>
+                    <?php endif; ?>
+
+                    <?php if ($_attributes_values['closure_front'] !== NULL && strlen($_attributes_values['closure_front']) !== 0): ?>
+                    <li><?php echo $_attributes_values['closure_front']; ?></li>
+                    <?php endif; ?>
+
+                    <?php if ($_attributes_values['cutting'] !== NULL && strlen($_attributes_values['cutting']) !== 0): ?>
+                    <li><?php echo $_attributes_values['cutting']; ?></li>
+                    <?php endif; ?>
+
+                    <?php if ($_attributes_values['fit'] !== NULL && strlen($_attributes_values['fit']) !== 0): ?>
+                    <li><?php echo $_attributes_values['fit']; ?></li>
+                    <?php endif; ?>
+
+                    <?php if ($_attributes_values['pockets'] !== NULL && strlen($_attributes_values['pockets']) !== 0): ?>
+                    <li><?php echo $_attributes_values['pockets']; ?></li>
+                    <?php endif; ?>
+
+                    <?php if ($_attributes_values['leather_details'] !== NULL && strlen($_attributes_values['leather_details']) !== 0): ?>
+                    <li><?php echo $_attributes_values['leather_details']; ?></li>
+                    <?php endif; ?>
+
+                    <?php if ($_attributes_values['slit'] !== NULL && strlen($_attributes_values['slit']) !== 0): ?>
+                    <li><?php echo $_attributes_values['slit']; ?></li>
+                    <?php endif; ?>
+
+                    <?php if ($_attributes_values['shoulder_finishing'] !== NULL && strlen($_attributes_values['shoulder_finishing']) !== 0): ?>
+                    <li><?php echo $_attributes_values['shoulder_finishing']; ?></li>
+                    <?php endif; ?>
+
+                    <?php if ($_attributes_values['pattern'] !== NULL && strlen($_attributes_values['pattern']) !== 0): ?>
+                    <li><?php echo $_attributes_values['pattern']; ?></li>
+                    <?php endif; ?>
+
+                    <?php if ($_attributes_values['fancy_yarn'] !== NULL && strlen($_attributes_values['fancy_yarn']) !== 0): ?>
+                    <li><?php echo $_attributes_values['fancy_yarn']; ?></li>
+                    <?php endif; ?>
+
+                    <?php if ($_attributes_values['detail_1'] !== NULL && strlen($_attributes_values['detail_1']) !== 0): ?>
+                    <li><?php echo $_attributes_values['detail_1']; ?></li>
+                    <?php endif; ?>
+
+                    <?php if ($_attributes_values['detail_2'] !== NULL && strlen($_attributes_values['detail_2']) !== 0): ?>
+                    <li><?php echo $_attributes_values['detail_2']; ?></li>
+                    <?php endif; ?>
+
+                    <?php if ($_attributes_values['detail_3'] !== NULL && strlen($_attributes_values['detail_3']) !== 0): ?>
+                    <li><?php echo $_attributes_values['detail_3']; ?></li>
+                    <?php endif; ?>
+
+                    <?php if ($_attributes_values['detail_4'] !== NULL && strlen($_attributes_values['detail_4']) !== 0): ?>
+                    <li><?php echo $_attributes_values['detail_4']; ?></li>
+                    <?php endif; ?>
+
+                    <?php if ($_attributes_values['detail_5'] !== NULL && strlen($_attributes_values['detail_5']) !== 0): ?>
+                    <li><?php echo $_attributes_values['detail_5']; ?></li>
+                    <?php endif; ?>
+
+                    <?php if ($_attributes_values['care_info_short'] !== NULL && strlen($_attributes_values['care_info_short']) !== 0): ?>
+                    <li><?php echo $_attributes_values['care_info_short']; ?></li>
+                    <?php endif; ?>
+
+                    <?php if ($_quality !== NULL && strlen($_quality) !== 0): ?>
+                    <li><?php echo $_quality; ?></li>
+                    <?php endif; ?>
+
+                    <?php if ($_attributes_values['fit'] !== NULL && strlen($_attributes_values['fit']) !== 0): ?>
+                    <li><?php echo $_attributes_values['fit']; ?></li>
+                    <?php endif; ?>
+
+                    <?php if ($_attributes_values['model_wears'] !== NULL && strlen($_attributes_values['model_wears']) !== 0): ?>
+                    <li>
+                        <?php echo trim($_attributes_values['model_wears']); ?><?php if (substr($_attributes_values['model_wears'], -1) != '.'): ?>. <?php endif; ?>
+                        <a class="btn-size-info underline" href="#size-info-container"><?php echo $this->__('Size chart'); ?></a>
+                    </li>
+                    <?php endif; ?>
+
+                    <?php if (($_attributes_values['chest_width'] !== NULL && strlen($_attributes_values['chest_width']) !== 0) || ($_attributes_values['length'] !== NULL && strlen($_attributes_values['length']) !== 0)): ?>
+                    <li>
+                        <?php if ($_attributes_values['chest_width'] !== NULL && strlen($_attributes_values['chest_width']) !== 0): ?>
+                        <?php echo $this->__('Width'); ?>: <?php echo $_attributes_values['chest_width']; ?> cm, 
+                        <?php endif; ?>
+                        <?php if ($_attributes_values['length'] !== NULL && strlen($_attributes_values['length']) !== 0): ?>
+                        <?php echo $this->__('Length'); ?>: <?php echo $_attributes_values['length']; ?> cm
+                        <?php endif; ?>
+                    </li>
+                    <?php endif; ?>
+                </ul>
+            </div>
+
+            <div class="add-to-cart-wrapper">
+                <?php echo $this->getChildHtml('product_type_data') ?>
+                <?php echo $this->getChildHtml('extrahint') ?>
+
+                <?php if (!$this->hasOptions()):?>
+                    <div class="add-to-box">
+                        <?php if($_product->isSaleable()): ?>
+                            <?php echo $this->getChildHtml('addtocart') ?>
+                            <?php if( $this->helper('wishlist')->isAllow() || $_compareUrl=$this->helper('catalog/product_compare')->getAddUrl($_product)): ?>
+                                <span class="or"><?php echo $this->__('OR') ?></span>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        <?php echo $this->getChildHtml('addto') ?>
+                        <?php echo $this->getChildHtml('sharing') ?>
+                    </div>
+                    <?php echo $this->getChildHtml('extra_buttons') ?>
+                <?php elseif (!$_product->isSaleable()): ?>
+                    <div class="add-to-box">
+                        <?php echo $this->getChildHtml('addto') ?>
+                        <?php echo $this->getChildHtml('sharing') ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <?php echo $this->getChildHtml('related_products') ?>
+
+            <div class="clearer"></div>
+            <?php if ($_product->isSaleable() && $this->hasOptions()):?>
+                <?php echo $this->getChildChildHtml('container2', '', true, true) ?>
+            <?php endif;?>
+        </form>
+        <script type="text/javascript">
+        //<![CDATA[
+            var productAddToCartForm = new VarienForm('product_addtocart_form');
+            productAddToCartForm.submit = function(button, url) {
+                if (this.validator.validate()) {
+                    var form = this.form;
+                    var oldUrl = form.action;
+
+                    if (url) {
+                       form.action = url;
+                    }
+                    var e = null;
+                    try {
+                        this.form.submit();
+                    } catch (e) {
+                    }
+                    this.form.action = oldUrl;
+                    if (e) {
+                        throw e;
+                    }
+
+                    if (button && button != 'undefined') {
+                        button.disabled = true;
+                    }
+                }
+            }.bind(productAddToCartForm);
+
+            productAddToCartForm.submitLight = function(button, url){
+                if(this.validator) {
+                    var nv = Validation.methods;
+                    delete Validation.methods['required-entry'];
+                    delete Validation.methods['validate-one-required'];
+                    delete Validation.methods['validate-one-required-by-name'];
+                    // Remove custom datetime validators
+                    for (var methodName in Validation.methods) {
+                        if (methodName.match(/^validate-datetime-.*/i)) {
+                            delete Validation.methods[methodName];
+                        }
+                    }
+
+                    if (this.validator.validate()) {
+                        if (url) {
+                            this.form.action = url;
+                        }
+                        this.form.submit();
+                    }
+                    Object.extend(Validation.methods, nv);
+                }
+            }.bind(productAddToCartForm);
+        //]]>
+        </script>
+    </div>
+
+    <div class="product-collateral toggle-content tabs">
+        <?php if ($detailedInfoGroup = $this->getChildGroup('detailed_info', 'getChildHtml')):?>
+            <dl id="collateral-tabs" class="collateral-tabs">
+                <?php foreach ($detailedInfoGroup as $alias => $html):?>
+                    <dt class="tab"><span><?php echo $this->escapeHtml($this->getChildData($alias, 'title')) ?></span></dt>
+                    <dd class="tab-container">
+                        <div class="tab-content"><?php echo $html ?></div>
+                    </dd>
+                <?php endforeach;?>
+            </dl>
+        <?php endif; ?>
+    </div>
+
+    <?php echo $this->getChildHtml('upsell_products') ?>
+    <?php // echo $this->getChildHtml('product_additional_data') ?>
+
+</div>

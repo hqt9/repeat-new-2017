@@ -1,0 +1,54 @@
+
+<style type="text/css">
+    .b2b-login-banner { height: 300px; }
+    .b2b-login-banner h1 {font-size: 60px;line-height: 300px;text-align: center;font-weight: bold;color: #fff;}
+    .b2b-login-content {width: 600px;padding: 50px;margin: 85px  auto;background: #f7efec;}
+    .b2b-login-content h2 {margin-bottom: 20px;font-size: 16px;text-transform: none;}
+    .b2b-login-content p {margin-bottom: 20px;font-size: 14px;text-transform: none;}
+    .b2b-login-content input {width: 100%;height: 48px;border-radius: 5px;}
+    .b2b-login-content .form-list li { margin-bottom: 20px;}
+</style>
+
+<div class="b2b-login">
+    <div class="b2b-login-banner clearfix" style="background-image:url('<?php echo $this->getSkinUrl('images/b2b_login_banner.png') ?>');>')">
+        <h1><?php echo $this->__('Login business page'); ?></h1>
+    </div>
+    <div class="b2b-login-content">
+        <?php echo $this->getMessagesBlock()->toHtml() ?>
+        <form action="<?php echo Mage::getUrl(); ?>customer/account/loginPost/" method="post" id="login-form" class="scaffold-form">
+            <?php echo $this->getBlockHtml('formkey'); ?>
+                <div class="<?php if ($this->helper('customer')->isRegistrationAllowed()): ?>col-2<?php else: ?>col-1<?php endif; ?> registered-users">
+                    <div class="content fieldset">
+                        <h2><?php echo $this->__('Sign in') ?></h2>
+                        <p><?php echo $this->__('Please enter your email and password below to accsee your account.') ?></p>
+                        <ul class="form-list">
+                            <li>
+                                <div class="input-box">
+                                    <input placeholder="email" type="email" autocapitalize="off" autocorrect="off" spellcheck="false" name="login[username]" value="<?php echo $this->escapeHtml($this->getUsername()) ?>" id="email" class="input-text required-entry validate-email" title="<?php echo $this->quoteEscape($this->__('Email Address')) ?>" />
+                                </div>
+                            </li>
+                            <li>
+                                <div class="input-box">
+                                    <input placeholder="password" type="password" name="login[password]" class="input-text required-entry validate-password" id="pass" title="<?php echo $this->quoteEscape($this->__('Password')) ?>" />
+                                </div>
+                            </li>
+                            <?php echo $this->getChildHtml('form.additional.info'); ?>
+                            <li>
+                                <a href="<?php echo $this->getForgotPasswordUrl() ?>" class="f-left"><?php echo $this->__('Forgot Your Password?') ?></a>
+                            </li>
+                            <?php echo $this->getChildHtml('persistent.remember.me'); ?>
+                        </ul>
+                        <?php echo $this->getChildHtml('persistent.remember.me.tooltip'); ?>
+                    </div>
+                    <div class="buttons-set">
+                        <button type="submit" class="button" title="<?php echo $this->quoteEscape($this->__('Login')) ?>" name="send" id="send2"><span><span><?php echo $this->__('Sigin in')?></span></span></button>
+                    </div>
+                </div>
+
+            <?php if (Mage::helper('checkout')->isContextCheckout()): ?>
+                <input name="context" type="hidden" value="checkout" />
+            <?php endif; ?>
+        </form>
+        <script type="text/javascript">var dataForm = new VarienForm('login-form', true);</script>
+    </div>
+</div>

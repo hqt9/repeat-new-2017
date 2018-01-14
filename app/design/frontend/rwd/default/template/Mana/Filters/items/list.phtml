@@ -1,0 +1,58 @@
+<?php 
+/**
+ * @category    Mana
+ * @package     Mana_Filters
+ * @copyright   Copyright (c) http://www.manadev.com
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+/** 
+ * Template for showing options for filter as a HTML list 
+ * @author Mana Team
+ * Injected instead of standard catalog/layer/filter.phtml in Mana_Filters_Block_Filter_Attribute constructor.
+ * This template is overridden by copying (template body was pasted from catalog/layer/filter.phtml 
+ * and modified as needed). All changes are marked with comments.
+ */
+/* @var $this Mana_Filters_Block_Filter_Attribute */
+?>
+
+<?php echo Mage::helper('mana_core')->getNamedHtml('mana_filters/markup', 'before_items', array('block' => $this)) ?>
+
+<?php $_attribute_code = $this->_filter->getData('attribute_model')->getData('attribute_code'); ?>
+<?php 
+    $_label_func = $_attribute_code === 'color' ? 
+        function($_label) { 
+            $_color = explode(';', $_label);
+            $_color_code = (isset($_color[0])) ? $_color[0] : '';
+            $_color_name = (isset($_color[1])) ? $_color[1] : '';
+            return sprintf('<div style="width: 15px; height: 15px; background-color: %s; display: inline-block; margin-right: 10px;"></div>%s', $_color_code, $_color_name);
+        } : function($_label) { return $_label; }; 
+?>
+
+<div class="filter-pop-out">
+    <div class="pop-header clearfix">
+        <a class="btn-close fl" href="#"><i class="icon-close iconfont"></i></a>
+        <a class="btn-done fr" href="#">Done</a>
+        <h3><?php echo $this->__($this->_filter->getName()) ?></h3>
+    </div>
+
+    <div class="pop-content">
+        <ul>
+            <?php foreach ($this->getItems() as $_item): ?>
+            <?php if ($_item->getMSelected()): ?>
+            <li class="selected">
+                <?php echo $_label_func($_item->getLabel()); ?>
+            </li>
+            <?php else: ?>
+            <li>
+                <a href="<?php echo $this->urlEscape($_item->getUrl()) ?>">
+                    <?php echo $_label_func($_item->getLabel()); ?>
+                    <span class="count">(<?php echo $_item->getCount() ?>)</span>
+                </a>
+            </li>
+            <?php endif; ?>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</div>
+
+<?php echo Mage::helper('mana_core')->getNamedHtml('mana_filters/markup', 'after_items', array('block' => $this)) ?>

@@ -1,0 +1,48 @@
+<?php
+$_store_id = $this->getRequest()->getParam('id');
+$_store = Mage::getModel('storelocator/storelocator')->load($_store_id);
+?>
+<div class="store-info" style="margin-bottom: 10px;">
+  <strong><?php echo strtoupper($_store->getData('name')); ?></strong>
+  <address>
+    <?php echo $_store->getData('address'); ?> <br>
+    <?php echo $_store->getData('zipcode'); ?> <?php echo $_store->getData('city'); ?> <br>
+    <?php echo Mage::getModel('directory/country')->loadByCode($_store->getData('country'))->getName(); ?> <br>
+    <?php $_phone = $_store->getData('phone'); ?>
+    <?php if (isset($_phone) && strlen($_phone) > 0): ?>
+    <?php echo $this->__('TEL:'); ?> <?php echo $_store->getData('phone'); ?>
+    <?php endif; ?>
+  </address>
+</div>
+<div id="googleMap" style="width: 700px; height: 600px;"></div>
+
+<script type="text/javascript">
+(function($) {
+  $(function() {
+    var container = $('#googleMap').get(0);
+    var mapProp = {
+        center: new google.maps.LatLng(<?php echo $_store->getData('latitude'); ?>, <?php echo $_store->getData('longitude'); ?>),
+        zoom: 14,
+        zoomControl:true,
+        zoomControlOptions: {
+          style:google.maps.ZoomControlStyle.SMALL
+        },
+        mapTypeId:google.maps.MapTypeId.ROADMAP
+      };
+
+    var _map = new google.maps.Map(container, mapProp);
+
+    var marker = new google.maps.Marker({
+      position: new google.maps.LatLng(<?php echo $_store->getData('latitude'); ?>, <?php echo $_store->getData('longitude'); ?>),
+      map: _map,
+      icon: '<?php echo $this->getSkinUrl('ecominfinity/storelocator/images/map_icon.png'); ?>'
+    });
+
+    $('.snap').remove();
+
+    setTimeout(function() {
+      window.print();
+    }, 2000);
+  });
+})(jQuery);
+</script>

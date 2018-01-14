@@ -1,0 +1,31 @@
+<?php 
+    $_stores = Mage::app()->getWebsite()->getStores(); 
+    $_current_store = Mage::app()->getStore();
+    $_current_store_id = $_current_store->getId();
+    $_current_url = $this->helper('core/url')->getCurrentUrl();
+    $_url_stack = explode('/', $_current_url);
+?>
+
+<?php if(count($this->getStores())>1): ?>
+
+<div class="form-language">
+  <ul>
+    <?php foreach ($_stores as $_store): ?>
+    <?php $_store_id = $_store->getId(); ?>
+    <?php if ($_store_id == $_current_store_id): ?>
+    <li class="active"><span><?php echo $_store->getName(); ?></span></li>
+    <?php else: ?>
+    <?php $_url_stack[3] = $_store->getCode(); ?>
+    <li><a href="<?php echo $_store->getCurrentUrl(); ?>"><?php echo $_store->getName(); ?></a></li>
+    <?php endif; ?>
+    <?php endforeach; ?>
+  </ul>
+</div>
+<?php endif; ?>
+<script type="text/javascript">
+    $j(function(){
+        $j('.popout-store-language .form-language').on('click','li a',function(){
+            $j('.popout-store-language').addClass('loading');
+        });
+    });
+</script>

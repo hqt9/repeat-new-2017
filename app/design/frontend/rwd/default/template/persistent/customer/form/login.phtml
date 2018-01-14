@@ -1,0 +1,140 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Customer login form template
+ *
+ * @see app/design/frontend/base/default/template/customer/form/login.phtml
+ */
+/** @var $this Mage_Customer_Block_Form_Login */
+?>
+
+<div class="account-login<?php if (!$this->helper('customer')->isRegistrationAllowed()) echo ' login-only' ?>">
+    <div class="page-title">
+        <div class="button-close btn-header-light fl">
+            <a href="/en/">
+                <i class="iconfont icon-close"></i>
+            </a>
+        </div>
+        <div class="button-done fr">
+            <button class="button header-right-done btn-submit disabled"><?php echo $this->__('Sign in') ?></button>
+        </div>
+        <h1><?php echo $this->__('Sign in'); ?></h1>
+    </div>
+    <?php echo $this->getMessagesBlock()->toHtml() ?>
+    <form action="<?php echo $this->getPostActionUrl() ?>" method="post" id="login-form" class="scaffold-form">
+        <?php echo $this->getBlockHtml('formkey'); ?>
+        <div class="col2-set">
+            <div class="<?php if ($this->helper('customer')->isRegistrationAllowed()): ?>col-2<?php else: ?>col-1<?php endif; ?> registered-users">
+                <div class="content fieldset">
+                    <p class="form-instructions"><?php echo $this->__('Sign in to My Account') ?></p>
+                    <p class="required"><?php echo $this->__('* Required Fields') ?></p>
+                    <ul class="form-list">
+                        <li>
+                            <label for="email" class="required"><em>*</em><?php echo $this->__('Email') ?></label>
+                            <div class="input-box">
+                                <i class="iconfont icon-email i-left"></i>
+                                <input type="email" autocapitalize="off" autocorrect="off" spellcheck="false" name="login[username]" value="<?php echo $this->escapeHtml($this->getUsername()) ?>" id="email" class="input-text required-entry validate-email" title="<?php echo $this->quoteEscape($this->__('Email Address')) ?>" placeholder="<?php echo $this->__('Email Address') ?>" />
+                            </div>
+                        </li>
+                        <li>
+                            <label for="pass" class="required"><em>*</em><?php echo $this->__('Password') ?></label>
+                            <div class="input-box">
+                                <i class="iconfont icon-lock i-left"></i>
+                                <input type="password" name="login[password]" class="input-text required-entry validate-password" id="pass" title="<?php echo $this->quoteEscape($this->__('Password')) ?>" placeholder="<?php echo $this->__('Password') ?>" />
+                                <button class="btn-text btn-show-password is-show">
+                                    <span class="text-show"><?php echo $this->__('Show') ?></span>
+                                    <span class="text-hide"><?php echo $this->__('Hide') ?></span>
+                                </button>
+                            </div>
+                        </li>
+                        <?php echo $this->getChildHtml('form.additional.info'); ?>
+                        <?php echo $this->getChildHtml('persistent.remember.me'); ?>
+                    </ul>
+                    <?php echo $this->getChildHtml('persistent.remember.me.tooltip'); ?>
+                </div>
+                <div class="buttons-set hidden">
+                    <button type="submit" class="button" title="<?php echo $this->quoteEscape($this->__('Login')) ?>" name="send" id="send2"><span><span><?php echo $this->__('Login') ?></span></span></button>
+                </div>
+            </div>
+            <p class="forgot-passwd">
+                <a href="<?php echo $this->getForgotPasswordUrl() ?>" class="f-left"><?php echo $this->__('Forgotten password?') ?></a>
+            </p>
+            <?php if ($this->helper('customer')->isRegistrationAllowed()): ?>
+                <p class="new-users">
+                    <?php echo $this->__('New to My Account?') ?>
+                    <a title="<?php echo $this->quoteEscape($this->__('Create an Account')) ?>" href="<?php echo Mage::helper('persistent')->getCreateAccountUrl($this->getCreateAccountUrl()) ?>"><span><span><?php echo $this->__('Register') ?></span></span></a>
+                </p>
+            <?php endif; ?>
+        </div>
+        <?php if (Mage::helper('checkout')->isContextCheckout()): ?>
+            <input name="context" type="hidden" value="checkout" />
+        <?php endif; ?>
+    </form>
+    <script type="text/javascript">
+    //<![CDATA[
+        Validation.defaultOptions.immediate = true;
+        var dataForm = new VarienForm('login-form', true);
+        
+
+        $j('.btn-submit').on('click',function(){
+            if(dataForm.validator.validate()){
+                dataForm.submit();
+            }
+        });
+
+        $j('#login-form input').on('input',function(){
+            if(dataForm.validator.getCheckForm()){
+                $j('.btn-submit').removeClass('disabled')
+            }else{
+                $j('.btn-submit').addClass('disabled')
+            }
+        });
+
+        $j('#login-form input').on('keypress',function(evt){
+            if (evt.keyCode == Event.KEY_RETURN) {
+                if(dataForm.validator.validate()){
+                    dataForm.submit();
+                }
+            }
+        });
+
+        $j('.btn-show-password').on('click',function(evt){
+            evt.preventDefault();
+            var elem = $j(this)
+            if(elem.hasClass('is-show')){
+                elem.removeClass('is-show').addClass('is-hide');
+                $j('#pass').attr('type','text');
+            }else{
+                elem.removeClass('is-hide').addClass('is-show');
+                $j('#pass').attr('type','password');
+            }
+        });
+
+    //]]>
+    </script>
+</div>

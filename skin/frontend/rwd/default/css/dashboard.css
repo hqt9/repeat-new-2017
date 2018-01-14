@@ -1,0 +1,88 @@
+
+body { color: #351611; font-size: 14px;}
+.block-title { padding: 0; margin: 0; }
+.dashboard-app {margin-bottom: 100px;}
+/*.dashboard-app .btn-text {cursor: pointer;outline: none;border: none;background: none;border-radius: 0;}*/
+
+.dashboard-app .dashboard-nav { margin-top: 40px; margin-bottom: 40px; }
+.dashboard-app .dashboard-nav ul {border-bottom: 1px solid #aaa;}
+.dashboard-app .dashboard-nav li { float: left; margin-right: 30px; }
+.dashboard-app .dashboard-nav li button {display: block;padding: 15px 5px;font-size: 18px;color: #ccc;}
+.dashboard-app .dashboard-nav li.active button {border-bottom: 1px solid #333;color: #333;}
+
+.dashboard-app .box {border-radius: 4px;box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.2);overflow: hidden;}
+.dashboard-app .ReactTable .rt-tbody .rt-tr { cursor: pointer; }
+
+
+.dashboard .block-title {height: 100px;background-color: #faf2ef;padding: 20px;box-sizing: border-box;}
+.dashboard .block-title .icon-box {float: left;width: 60px;height: 60px;margin-right: 20px;text-align: center;}
+.dashboard .block-title .icon-box .iconfont {font-size: 60px;line-height: 60px;color:#351611;}
+.dashboard .block-title h3 {margin: 2px 0 18px;font-size: 18px;font-weight: normal;line-height: 20px;}
+.dashboard .block-title .update-time { color: #999; }
+
+.dashboard .info-list { margin-bottom: 40px; }
+.dashboard .info-list li {float: left;width: 268px;padding: 10px 20px;margin-right: 40px;background-color: #faf2ef;box-sizing: border-box;}
+.dashboard .info-list li:last-of-type { margin-right:0; }
+.dashboard .info-list .info-title {margin-bottom: 28px;font-size: 18px;line-height: 1em;font-weight: 400;}
+.dashboard .info-list .info-value {font-size: 36px;font-weight: 300;}
+.dashboard .info-list .info-change {padding-top: 30px;font-size: 14px;color: #999;}
+.dashboard .info-list .info-change-increase {margin-right: 5px; color: #386eb6; }
+.dashboard .info-list .info-change-decrease {margin-right: 5px;color: #e85d6a;}
+
+.dashboard .left-side { width: 475px; margin-right: 40px; }
+.dashboard .right-side { width: calc(100% - 515px);  }
+.dashboard .left-side .table { margin-bottom: 40px; }
+
+.dashboard .chart {height: 470px;margin-bottom: 40px;}
+.dashboard .chart-header {height: 90px;padding: 30px 40px;line-height: 30px;background-color: #faf2ef;box-sizing: border-box;border-bottom: 1px solid #ccc;}
+.dashboard .chart-header h3 {font-size: 18px;line-height: 30px;font-weight: normal;}
+.dashboard .chart-legend {border: 1px solid #aaa;border-radius: 4px;}
+.dashboard .chart-legend li {float: left;border-right: 1px solid #aaa;overflow: hidden;}
+.dashboard .chart-legend li:last-of-type { border-right: none;}
+.dashboard .chart-legend li button {display: block;padding: 5px 10px;line-height: 20px;border-radius: 4px;}
+.dashboard .chart-legend li.active button { background-color :#fff; }
+
+.dashboard .product { width: 475px; }
+.dashboard .product .product-img {width: 170px;padding: 30px;box-sizing: border-box;}
+.dashboard .product .product-text {position: relative;width: calc(100% - 170px);height: 230px;padding: 30px 0;box-sizing: border-box;}
+
+.dashboard .product .product-name {margin-bottom: 10px;font-size: 24px;font-family: cursive;}
+.dashboard .product .product-count {position: absolute;left: 0;bottom: 20px;}
+.dashboard .product .product-count p {line-height: 20px;color: #999;}
+.dashboard .product .product-count span {font-size: 48px;line-height: 1em;}
+
+
+.list .list-header h3 {line-height: 70px;font-size: 20px;padding: 0 30px;}
+.list .ReactTable .rt-thead .rt-th.-cursor-pointer { padding: 26px 30px; border-right: none; }
+.list .ReactTable .rt-tbody .rt-td {padding: 17px 30px;border-right: none;font-size: 16px;line-height: 35px;}
+
+.list .order-status {float: left;padding: 0 15px;line-height: 35px;border-radius: 4px;text-transform: capitalize;}
+.list .order-action { line-height: 35px; }
+.list .order-action i {float: left;line-height: 35px;left;margin-right: 10px;color: #e5864c;font-size: 24px;}
+
+
+.order { position: relative; }
+.order .top { margin-bottom: 40px; }
+.order .left { margin-right: 40px; }
+
+.order .block-title h3 { padding: 20px; font-size: 18px; font-weight: normal; line-height: 20px; background-color: #faf2ef; }
+.order > .top > .left { width: 900px; }
+.order > .top > .right { width: calc(100% - 940px) }
+.order > .top > .left .left { width: 430px; }
+.order > .top > .left .right { width: calc(100% - 470px) }
+
+
+.order .container { padding: 20px; font-size: 16px; line-height: 24px; }
+.order dl { float: left; width: 100%; padding: 5px 0; margin-bottom: 10px; }
+.order dt { float: left; width: 200px; margin-right: 10px; color: #999; }
+.order dd { float: right; width: calc(100% - 210px); clear: right; }
+.order dd .order-status {display: inline-block;padding: 5px 10px;border-radius: 5px;}
+
+.order .btn-back {position: absolute;top: -80px;right: 0px;}
+.order .btn-back button {display: block;padding: 8px 0;border-radius: 4px;font-size: 16px;}
+
+.order .order-product .product-name {font-weight: bold;white-space: initial;}
+.order .order-product li { margin-bottom: 5px;}
+.order .order-product li label { font-weight: bold; margin-right: 5px;}
+
+

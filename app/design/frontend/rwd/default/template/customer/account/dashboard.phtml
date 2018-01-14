@@ -1,0 +1,342 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2006-2017 X.commerce, Inc. and affiliates (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/lib/jquery.customSelect.min.js') ?>"></script>
+
+<?php $bookBlock = $this->getLayout()->getBlockSingleton('Mage_Customer_Block_Address_Book'); ?>
+<div class="dashboard">
+    <?php echo $this->getMessagesBlock()->toHtml() ?>
+
+    <ul class="account-menu">
+        <li class="section customer-info">
+            <a class="section-title" href="#"><?php echo $this->__('Personal'); ?><i class="iconfont icon-right"></i></a>
+            <div class="section-expand">
+                <div class="section-back clearfix">
+                    <div class="btn-back fl"><i class="iconfont icon-left"></i></div>
+                    <h2><?php echo $this->__('Personal'); ?></h2>
+                </div>
+                <div class="section-content">
+                    <div class="card">
+                        <div class="card-container">
+                            <div class="card-content">
+                                <label><?php echo $this->__('Details'); ?></label>
+                                <p><?php echo $this->getCustomer()->getFirstname(); ?></p>
+                                <p><?php echo $this->getCustomer()->getLastname(); ?></p>
+                                <p><?php echo $this->escapeHtml($this->getCustomer()->getEmail()) ?></p>
+                            </div>
+                            <ul class="card-footer clearfix">
+                                <li class="fr"><a href="#" class="card-edit">Edit</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script type="text/template" id="tpl-edit-info">
+                <?php echo $this->getChildHtml('customer_edit'); ?>
+            </script>
+        </li>
+
+        <li class="section customer-password">
+            <a class="section-title" href="#"><?php echo $this->__('Password'); ?><i class="iconfont icon-right"></i></a>
+            <div class="section-expand">
+                <div class="section-back clearfix">
+                    <a class="btn-back fl" href="#"><i class="iconfont icon-left"></i></a>
+                    <h2><?php echo $this->__('Password'); ?></h2>
+                </div>
+                <div class="section-content">
+                    <div class="section-form">
+                        <p class=""><?php echo $this->__('To update your password, enter your existing password and choose a new one.'); ?></p>
+                        <?php echo $this->getChildHtml('change_password'); ?>
+                    </div>
+                </div>
+            </div>
+        </li>
+
+
+        <li class="section customer-address <?php if(strstr($_SERVER['QUERY_STRING'], '_setAddressId')){ ?> active <?php } ?>">
+            <a class="section-title" href="#"><?php echo $this->__('Address Book'); ?><i class="iconfont icon-right"></i></a>
+            <div class="section-expand">
+                <div class="section-back clearfix">
+                    <a class="btn-back fl" href="#"><i class="iconfont icon-left"></i></a>
+                    <h2><?php echo $this->__('Address Book'); ?></h2>
+                </div>
+                <div class="section-content">
+                    <script type="text/javascript">
+                        function deleteAddress(addressId) {
+                            if(confirm('<?php echo Mage::helper('core')->jsQuoteEscape($this->__('Are you sure you want to delete this address?')) ?>')) {
+                                window.location='<?php echo $bookBlock->getDeleteUrl() ?>id/'+addressId;
+                            }
+                            return false;
+                        }
+                    </script>
+
+                    <?php echo $this->getChildHtml('address_book'); ?>
+                    <div class="card-add">
+                        <a href="#" class="add-new-address"><i class="iconfont icon-add"></i> <?php echo $this->__('Add Address') ?></a>
+                    </div>
+
+                    <?php
+                        $request = $this->getRequest();
+                        $request->initForward();
+                        $request->setParams(['id' => $_GET['_setAddressId']]);
+                        $editBlock = $this->getLayout()->getBlockSingleton('Mage_Customer_Block_Address_Edit')->setParams('id', $_GET['_setAddressId']);
+                    ?>
+                    <script type="text/template" id="tpl-edit-address">
+                        <form action="<?php echo $editBlock->getSaveUrl() ?>" method="post" id="form-validate" class="scaffold-form" enctype="multipart/form-data">
+                            <div class="fieldset">
+                            <?php echo $this->getBlockHtml('formkey')?>
+                            <input type="hidden" name="success_url" value="<?php echo $this->getSuccessUrl() ?>" />
+                            <input type="hidden" name="error_url" value="<?php echo $this->getErrorUrl() ?>" />
+
+                            <div class="entry">
+                                <label for="firstname" class="required"><em>*</em>First Name</label>
+                                <div class="input-box">
+                                    <input type="text" placeholder="<?php echo $this->__('First Name') ?>" id="firstname" name="firstname" 
+                                        value="<?php echo $this->escapeHtml($editBlock->getAddress()->getFirstname()) ?>"
+                                        maxlength="255" class="input-text required-entry">
+                                </div>
+                            </div>
+                            <div class="entry">
+                                <label for="lastname" class="required"><em>*</em>Last Name</label>
+                                <div class="input-box">
+                                    <input type="text" placeholder="<?php echo $this->__('Last Name') ?>" id="lastname" name="lastname" 
+                                        value="<?php echo $this->escapeHtml($editBlock->getAddress()->getLastname()) ?>"
+                                        maxlength="255" class="input-text required-entry">
+                                </div>
+                            </div>
+                            <div class="entry">
+                                <label for="company"><?php echo $this->__('Company') ?></label>
+                                <div class="input-box">
+                                    <input type="text" name="company" id="company" placeholder="<?php echo Mage::helper('core')->quoteEscape($this->__('Company')) ?>" 
+                                        value="<?php echo $this->escapeHtml($editBlock->getAddress()->getCompany()) ?>" 
+                                        class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('company') ?>" />
+                                </div>
+                            </div>
+                            <div class="entry">
+                                <label for="telephone" class="required"><em>*</em><?php echo $this->__('Telephone') ?></label>
+                                <div class="input-box">
+                                    <input type="tel" name="telephone" 
+                                        value="<?php echo $this->escapeHtml($editBlock->getAddress()->getTelephone()) ?>" placeholder="<?php echo Mage::helper('core')->quoteEscape($this->__('Telephone')) ?>" 
+                                        class="input-text  <?php echo $this->helper('customer/address')->getAttributeValidationClass('telephone') ?>" id="telephone" />
+                                </div>
+                            </div>
+                            <div class="entry">
+                                <label for="fax"><?php echo $this->__('Fax') ?></label>
+                                <div class="input-box">
+                                    <input type="tel" name="fax" id="fax" placeholder="<?php echo Mage::helper('core')->quoteEscape($this->__('Fax')) ?>" 
+                                        value="<?php echo $this->escapeHtml($editBlock->getAddress()->getFax()) ?>" 
+                                        class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('fax') ?>" />
+                                </div>
+                            </div>
+
+                            <?php $_streetValidationClass = $this->helper('customer/address')->getAttributeValidationClass('street'); ?>
+                                <div class="entry">
+                                    <label for="street_1" class="required"><em>*</em><?php echo $this->__('Street Address') ?></label>
+                                    <div class="input-box">
+                                        <input type="text" name="street[]" value="<?php echo $this->escapeHtml($editBlock->getAddress()->getStreet(1)) ?>" placeholder="<?php echo Mage::helper('core')->quoteEscape($this->__('Street Address')) ?>" id="street_1" class="input-text <?php echo $_streetValidationClass ?>" />
+                                    </div>
+                                </div>
+                            <?php $_streetValidationClass = trim(str_replace('required-entry', '', $_streetValidationClass)); ?>
+                            <?php for ($_i = 2, $_n = $this->helper('customer/address')->getStreetLines(); $_i <= $_n; $_i++): ?>
+                                <div class="entry">
+                                    <label for="billing:street<?php echo $_i ?>"><?php echo $this->__('Street Address %s', $_i) ?></label>
+                                    <div class="input-box">
+                                        <input type="text" name="street[]" value="<?php echo $this->escapeHtml($editBlock->getAddress()->getStreet($_i)) ?>" placeholder="<?php echo Mage::helper('core')->quoteEscape($this->__('Street Address %s', $_i)) ?>" id="street_<?php echo $_i ?>" class="input-text <?php echo $_streetValidationClass ?>" />
+                                    </div>
+                                </div>
+                            <?php endfor; ?>
+                            <?php if ($this->helper('customer/address')->isVatAttributeVisible()) : ?>
+                            <div class="entry">
+                                <label for="vat_id"><?php echo $this->__('VAT Number') ?></label>
+                                <div class="input-box">
+                                    <input type="text" name="vat_id" value="<?php echo $this->escapeHtml($editBlock->getAddress()->getVatId()) ?>" placeholder="<?php echo Mage::helper('core')->quoteEscape($this->__('VAT Number')) ?>" id="vat_id" class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('vat_id') ?>" />
+                                </div>
+                            </div>
+                            <?php endif; ?>
+                            <div class="entry">
+                                <label for="city" class="required"><em>*</em><?php echo $this->__('City') ?></label>
+                                <div class="input-box">
+                                    <input type="text" name="city" value="<?php echo $this->escapeHtml($editBlock->getAddress()->getCity()) ?>"  placeholder="<?php echo Mage::helper('core')->quoteEscape($this->__('City')) ?>" class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('city') ?>" id="city" />
+                                </div>
+                            </div>
+                            <div class="entry">
+                                <label for="region_id" class="required"><em>*</em><?php echo $this->__('State/Province') ?></label>
+                                <div class="select-box">
+                                    <select id="region_id" name="region_id" placeholder="<?php echo Mage::helper('core')->quoteEscape($this->__('State/Province')) ?>" class="validate-select" style="display:none;">
+                                       <option value=""><?php echo $this->__('Please select region, state or province') ?></option>
+                                    </select>
+                                    <input type="text" id="region" name="region" value="<?php echo $this->escapeHtml($editBlock->getAddress()->getRegion()) ?>"  placeholder="<?php echo Mage::helper('core')->quoteEscape($this->__('State/Province')) ?>" class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('region') ?>" />
+                                </div>
+                            </div>
+                            <div class="entry">
+                                <label for="country" class="required"><em>*</em><?php echo $this->__('Country') ?></label>
+                                <div class="select-box">
+                                    <?php echo $editBlock->getCountryHtmlSelect() ?>
+                                </div>
+                            </div>
+                            <div class="entry">
+                                <label for="zip" class="required"><em>*</em><?php echo $this->__('Zip/Postal Code') ?></label>
+                                <div class="input-box">
+                                    <input type="text" name="postcode" value="<?php echo $this->escapeHtml($editBlock->getAddress()->getPostcode()) ?>" placeholder="<?php echo Mage::helper('core')->quoteEscape($this->__('Zip/Postal Code')) ?>" id="zip" class="input-text validate-zip-international <?php echo $this->helper('customer/address')->getAttributeValidationClass('postcode') ?>" />
+                                </div>
+                            </div>
+                            <div class="buttons-set">
+                                <p class="back-link"><a href="<?php echo $this->escapeUrl($editBlock->getBackUrl()) ?>"><small>&laquo; </small><?php echo $this->__('Back') ?></a></p>
+                                <button type="submit" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Done')) ?>" class="button large"><span><span><?php echo $this->__('Done') ?></span></span></button>
+                            </div>
+                        </form>
+                    </script>
+                </div>
+            </div>
+        </li>
+    </ul>
+
+</div>
+<script type="text/javascript">
+    (function(root) {
+        var _ = root._;
+        $j(function(){
+
+            var isEditInfo = false;
+            var wrapSelect = function (){
+                $j('#form-validate select').each(function(i,elem){
+                    $j(elem).customSelect();
+                    var p = $j(elem).parent();
+                    var s = p.find('select');
+                    $j(elem).css('font-size','16px');
+                    if(s.css('display')=== 'none'){
+                        p.css('display','none')
+                    }else{
+                        p.css('display','inherit')
+                    }
+                });
+            };
+            var checkForm = function(){
+                var dataForm = new VarienForm('form-validate', false);
+                $j('#region_id').attr('defaultValue','0');
+                if (!isEditInfo) {
+                    new RegionUpdater('country', 'region', 'region_id', <?php echo $this->helper('directory')->getRegionJson() ?>, undefined, 'zip');
+                    wrapSelect();
+                }
+                $j('.popout-form .popout-done').on('click',function(){
+                    if (dataForm.validator.validate()) {
+                        dataForm.submit();
+                    }
+                    return false;
+                })
+                $j('.popout-form form .btn-save').on('click', function() {
+                    if (dataForm.validator.validate()) {
+                        dataForm.submit();
+                    }
+                    return false;
+                });
+            }
+            var showForm = function(){
+                $j('#page-overlay').addClass('active');
+                $j('.popout-form').addClass('active');
+            }
+
+            if (window.location.search.indexOf('_setAddressId') !== -1) {
+                var title = '<?php echo $this->__('Change address') ?>';
+                var template = _.template($j('#tpl-edit-info').html());
+                var template = _.template($j('#tpl-edit-address').html());
+                $j('.popout-form .popout-content').html(template);
+                showForm();
+                checkForm();
+            }
+
+            $j('.customer-account').on('change', 'select',function(){
+                wrapSelect();
+            });
+
+            $j('.customer-account .account-menu').on('click','.section-title',function(){
+                $j('.customer-account .col-main').addClass('active');
+                $j(this).closest('.section').addClass('active');
+                return false
+            });
+
+            $j('.customer-account .account-menu').on('click','.section-back .btn-back',function(){
+                $j('.customer-account .col-main').removeClass('active');
+                $j(this).closest('.section').removeClass('active');
+                return false
+            });
+
+
+            $j('.customer-info .card-edit').on('click',function(){
+                isEditInfo = true;
+                var title = '<?php echo $this->__('Change info') ?>';
+                var template = _.template($j('#tpl-edit-info').html());
+                $j('.popout-form .popout-title').text(title);
+                $j('.popout-form .popout-content').html(template);
+                showForm();
+                checkForm();
+                return false
+            });
+
+            $j('.customer-address .btn-address-edit').on('click',function(){
+                var id = $j(this).data('id');
+                var title = '<?php echo $this->__('Change address') ?>';
+                $j('.popout-form .popout-title').text(title);
+                $j('.popout-form').addClass('loading');
+                showForm();
+                window.location.search='?_setAddressId=' + id;
+                return false
+            });
+
+            $j('.add-new-address').on('click',function(){
+                var title = '<?php echo $this->__('Add address') ?>';
+                $j('.popout-form').addClass('loading');
+                showForm();
+                window.location.search='?_setAddressId=';
+                return false
+            });
+
+            $j('.popout-form .popout-close').on('click',function(){
+                $j('#page-overlay').removeClass('active');
+                $j('.popout-form').removeClass('active');
+                $j('.popout-form .popout-content').html('');
+                return false
+            });
+        })
+    })(this);
+</script>
+
+<?php if (false): ?>
+<?php echo $this->getChildHtml('hello') ?>
+<?php echo $this->getChildHtml('top') ?>
+<div class="box-account box-info">
+    <div class="box-head">
+        <h2><?php echo $this->__('Account Information') ?></h2>
+    </div>
+    <?php /* Extensions placeholder */ ?>
+    <?php echo $this->getChildHtml('customer.account.dashboard.extra') ?>
+    <?php echo $this->getChildHtml('info') ?>
+</div>
+<?php echo $this->getChildHtml('address') ?>
+<?php echo $this->getChildHtml('info1') ?>
+<?php echo $this->getChildHtml('info2') ?>
+<?php endif; ?>

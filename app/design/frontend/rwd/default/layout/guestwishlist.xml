@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+
+  <default>
+    <reference name="content">
+      <block type="guestwishlist/init" name="init_wishlist"/>
+    </reference>
+  </default>
+
+  <guestwishlist_index_index translate="label">
+    <label>Customer My Account My Wishlist</label>
+    <update handle="customer_account"/>
+    <reference name="my.account.wrapper">
+      <block type="guestwishlist/customer_wishlist" name="customer.wishlist" template="guestwishlist/view.phtml">
+        <block type="guestwishlist/customer_wishlist_item_options" name="customer.wishlist.item.options" as="item_options"/>
+      </block>
+    </reference>
+    <reference name="right">
+      <action method="unsetChild">
+        <name>wishlist_customer_sidebar</name>
+      </action>
+    </reference>
+  </guestwishlist_index_index>
+
+  <guestwishlist_index_configure translate="label">
+    <label>Configure Wishlist Item</label>
+    <update handle="catalog_product_view"/>
+    <reference name="product.info">
+      <block type="guestwishlist/item_configure" name="product.info.addto" as="addto" template="guestwishlist/item/configure/addto.phtml"/>
+    </reference>
+    <reference name="product.info.options.wrapper.bottom">
+      <action method="unsetChild">
+        <name>product.info.addto</name>
+      </action>
+      <action method="append">
+        <block>product.info.addto</block>
+      </action>
+    </reference>
+  </guestwishlist_index_configure>
+
+  <guestwishlist_index_share>
+    <label>Customer My Account Wishlist Sharing Form</label>
+    <update handle="customer_account"/>
+    <reference name="my.account.wrapper">
+      <block type="guestwishlist/customer_sharing" name="guestwishlist.sharing" template="guestwishlist/sharing.phtml"/>
+    </reference>
+    <reference name="right">
+      <action method="unsetChild">
+        <name>wishlist_customer_sidebar</name>
+      </action>
+    </reference>
+  </guestwishlist_index_share>
+</layout>

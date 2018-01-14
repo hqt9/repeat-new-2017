@@ -1,0 +1,118 @@
+<style type="text/css">
+
+    
+
+    .my-wishlist #wishlist-view-form #wishlist-table, .my-wishlist #wishlist-view-form #wishlist-table tbody {display: block;}
+    #wishlist-table thead {display: none;}
+    #wishlist-table tbody tr {float: left;width: 50%;box-sizing: border-box;padding: 0 10px 10px;}
+    #wishlist-table tbody tr:nth-child(odd) {padding-left: 0;}
+    #wishlist-table tbody tr:nth-child(even) {padding-right: 0;}
+    .data-table tbody td {border-bottom: none;display: block;}
+    img {width: 100%;height: auto;}
+    #wishlist-table tbody .customer-wishlist-item-remove {position: absolute;bottom: 0;width: 89%;text-align: center;background: #f8f3f0;border-bottom-right-radius: 5px;border-bottom-left-radius: 5px;left: 11px;}
+    #wishlist-table .customer-wishlist-item-remove a {display: initial; background: url();font-size: 12px;color: #351611;vertical-align: initial;line-height: 40px;text-decoration: underline;}
+    #wishlist-table .product-name a {line-height: 20px;font-family: 'Helvetica Neue'; font-weight: 400; color: #351611;font-size: 12px;display: block; padding-top: 10px;}
+    #wishlist-table .price-box .price {line-height: 20px; font-family: 'Helvetica Neue'; font-weight: 400; color: #351611;font-size: 12px;display: block;}
+    #wishlist-table .price-box {margin-bottom: 40px;padding-bottom: 20px;}
+</style>
+
+<div class="my-wishlist">
+    <div class="page-title ">
+    <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+    <?php if ($this->hasWishlistItems()): ?>
+    <form id="wishlist-view-form" action="<?php echo $this->getUrl('*/*/update') ?>" method="post">
+    <div class="btn-set">
+        <a href="#" class="button btn-share btn-share-wishlist"><?php echo $this->__('Share Wishlist'); ?></a>
+
+        <?php if ($this->isSaleable()): ?>
+        <!-- <a href="#" class="button btn-add-all-to-cart"><?php echo $this->__('Add All to Cart'); ?></a> -->
+        <?php endif; ?>
+
+        <!-- <a href="#" class="button btn-update-wishlist"><?php echo $this->__('Update Wishlist'); ?></a> -->
+    </div>
+    <?php echo $this->getBlockHtml('formkey')?>
+    
+    <div class="products-holder">
+    <?php foreach ($this->getWishlistItems() as $item): ?>
+    <?php $product = $item->getProduct(); ?>
+    <?php $product = Mage::getModel('catalog/product')->load($product->getId()); ?>
+    <?php $isVisibleProduct = $product->isVisibleInSiteVisibility(); ?>
+        <div class="product">
+            <div class="thumbnail">
+                <a href="<?php echo $this->getProductUrl($item); ?>" class="product-image">
+                    <img src="<?php echo $this->helper('catalog/image')->init($product, 'small_image')->resize(210, 280); ?>">
+                </a>
+            </div>
+            <div class="product-name">
+                <a href="<?php echo $this->getProductUrl($item) ?>"><?php echo $product->getName(); ?></a>
+            </div>
+            <?php echo $this->getPriceHtml($product) ?>
+            <div class="btn-set">
+                <a href="<?php echo $this->getItemRemoveUrl($item) ?>" title="<?php echo Mage::helper('wishlist')->__('Remove Item') ?>" onclick="return confirmRemoveWishlistItem();" class="btn-delete"><?php echo Mage::helper('wishlist')->__('Remove')?></a>
+            </div>
+            
+        </div>
+    <?php endforeach; ?>
+        <div class="clearfix"></div>
+    </div>
+
+    <div class="information">
+        <div class="title">
+            <h3><?php echo $this->__('Save your favourites') ;?></h3>
+        </div>
+        <div class="subtitle">
+            <p><?php echo $this->__('Sign in to access your favourites across devices'); ?></p>
+        </div>
+        <div class="btn-set">
+            <a href="<?php echo Mage::getUrl('customer/account/login'); ?>" class="button"><?php echo $this->__('Sign in'); ?></a>
+            <p><?php echo $this->__('New to My Account?'); ?> <a href="<?php echo Mage::getUrl('customer/account/create'); ?>"><?php echo $this->__('Register'); ?></a></p>
+        </div>
+    </div>
+    <p><a href="#" class="btn-remove-all">Remove all favourites</a></p>
+
+    </form>
+    <?php else: ?>
+        <p><?php echo Mage::helper('wishlist')->__('You have no items in your wishlist.') ?></p>
+    <?php endif ?>
+    <script type="text/javascript">
+    //<![CDATA[
+    function confirmRemoveWishlistItem() {
+        return confirm('<?php echo Mage::helper('wishlist')->__('Are you sure you want to remove this product from your wishlist?') ?>');
+    }
+
+    function focusComment(obj) {
+        if( obj.value == '<?php echo $this->helper('wishlist')->defaultCommentString() ?>' ) {
+            obj.value = '';
+        } else if( obj.value == '' ) {
+            obj.value = '<?php echo $this->helper('wishlist')->defaultCommentString() ?>';
+        }
+    }
+
+    function addWItemToCart(itemId) {
+        var url = '<?php echo $this->getItemAddToCartUrl('%item%') ?>';
+        url = url.gsub('%item%', itemId);
+        var form = $('wishlist-view-form');
+        if (form) {
+            var input = form['qty[' + itemId + ']'];
+            if (input) {
+                var separator = (url.indexOf('?') >= 0) ? '&' : '?';
+                url += separator + input.name + '=' + encodeURIComponent(input.value);
+            }
+        }
+        setLocation(url);
+    }
+
+    function addAllWItemsToCart() {
+        var url = '<?php echo $this->getUrl('mgwishlist/index/allcart') ?>';
+        var separator = (url.indexOf('?') >= 0) ? '&' : '?';
+        $$('#wishlist-view-form .qty').each(
+            function (input, index) {
+                url += separator + input.name + '=' + encodeURIComponent(input.value);
+                separator = '&';
+            }
+        );
+        setLocation(url);
+    }
+    //]]>
+    </script>
+</div>

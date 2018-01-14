@@ -1,0 +1,64 @@
+<script type="text/javascript">
+  <?php $_code_current = Mage::app()->getStore()->getCode(); ?>
+  window.langKey = '<?php echo $_code_current; ?>';
+</script>
+<?php 
+    $_stores = Mage::app()->getWebsite()->getStores(); 
+    $_current_store = Mage::app()->getStore();
+    $_current_url = $this->helper('core/url')->getCurrentUrl();
+?>
+<div id="mobile-nav" class="skip-content visible-phone">
+    <nav id="phone-nav">
+        <div class="nav-scroll">
+            <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('header_nav_side')->toHtml() ?>
+            <div class="account-nav nav-list">
+                <span class="section-title"><?php echo $this->__('ACCOUNT') ?></span>
+                <ul>
+                    <?php 
+                        $_cartQty = Mage::getSingleton('checkout/cart')->getSummaryQty();
+                        $_wishlist_items = $this->helper('wishlist')->getWishlist()->getItemsCount();
+                        if(Mage::getSingleton('customer/session')->isLoggedIn()) {
+                    ?>
+                    <li><a href="<?php echo Mage::helper('customer')->getAccountUrl(); ?>"><?php echo $this->__('My Account') ?></a></li>
+                    <li><a class="logout" href="<?php echo Mage::helper('customer')->getLogoutUrl(); ?>"><?php echo $this->__('Sign out') ?></a></li>
+
+                    <?php } else { ?>
+
+                    <li><a href="<?php echo Mage::helper('customer')->getLoginUrl(); ?>"><?php echo $this->__('Sign in / Sign up') ?></a></li>
+
+                    <?php } ?>
+
+                    <li><a href="<?php echo $this->helper('checkout/cart')->getCartUrl(); ?>" data-target-element="#header-cart">
+                        <?php echo $this->__('Shopping Bag') ?>
+                        <span class="bag-count <?php if($_cartQty <= 0): ?> no-count <?php endif; ?>"><?php echo $_cartQty; ?></span>
+                    </a></li>
+                    <li><a href="<?php echo Mage::getUrl('guestwishlist'); ?>"><?php echo $this->__('Wishlist') ?>
+                        <span class="bag-count <?php if($_wishlist_items <= 0): ?> no-count <?php endif; ?>"><?php echo $_wishlist_items; ?></span>
+                    </a></li>
+                </ul>
+            </div>
+            <div class="nav-footnote">
+                <a id="change-language" href="#">
+                    <i class="iconfont icon-language"></i>
+                    <span><?php echo $_current_store->getName(); ?></span>
+                </a>
+            </div>
+        </div>
+    </nav>
+</div>
+
+
+<script type="text/javascript">
+    $j(function(){
+        $j('#change-language').on('click',function(){
+            $j('.wrapper').removeClass('open-menu');
+            $j('.popout-store-language').addClass('active');
+            $j('#page-overlay').addClass('active');
+        });
+        $j('.popout-store-language .button-done').on('click',function(){
+            $j('.popout-store-language').removeClass('active');
+            $j('#page-overlay').removeClass('active');
+        });
+    });
+</script>
+

@@ -1,0 +1,45 @@
+/*template\wishlist\view.phtml*/
+.my-wishlist .btn-set { margin-bottom: 10px; }
+.my-wishlist .btn-set a { position: relative; margin: 0; width: 100%;  }
+.my-wishlist .btn-set .btn-share { height: 44px; padding: 0; line-height: 44px; border-radius: 3px; }
+.products-holder .product { width: 49%; float: left; border: 1px solid #ddd; }
+.products-holder .product:nth-child(even) { float: right; }
+.products-holder .product .thumbnail { display: inline-block; }
+.products-holder .product .product-name { text-align: left; margin: 5px; line-height: 16px; }
+.products-holder .product .price-box { text-align: left; margin: 0 0 5px; padding: 0 5px; }
+.products-holder .product .btn-set { background: #f8f3f0; margin: 0; padding: 7px 5px; }
+.products-holder .product .btn-set a { text-decoration: underline; }
+
+.customer-account .block-content ul li span { display: block; }
+
+.my-wishlist .information { border: 1px solid #f8f3f0; border-radius: 5px; margin: 20px 0; padding: 20px 10px; }
+.my-wishlist .information h3 { font-weight: bold; font-size: 14px; text-transform: none; text-align: center; }
+.my-wishlist .information .subtitle { margin: 30px 0 20px; text-align: center; font-size: 14px; }
+.my-wishlist .information .btn-set > a { height: 44px; padding: 0; line-height: 44px; border-radius: 3px; }
+.my-wishlist .information .btn-set p { text-align: center; margin-top: 20px; }
+
+.my-wishlist .btn-remove-all { display: block; text-align: center; font-weight: 200; text-decoration: underline; }
+
+/*catalog/public/view/we recommend*/
+.detail-middle p {padding: 20px 0;border-top: 1px solid #c7c6c6;font-weight: bold; }
+.widget-title {display: none;}
+
+/*home page*/
+.phone-all .photo-list {display: inline-block;width: 25%; }
+.phone-all .photo-list img {width: 100%;height: auto;}
+.phone-all .font-zero {font-size: 0;}
+@media only screen and (max-width: 771px) {
+    .phone-all img {width: 100%;height: auto;}
+    .phone-all .clearfix:after { content: ''; display: table; clear: both; }
+    .phone-all {width: 100%; margin: 0 auto;}
+    .phone-all .phone-border {position: relative;text-align: center;}
+    .phone-all .phone-border:first-child {margin-top: -20px;position: relative;}
+    .phone-all .phone-border .view-all-photo {position: inherit;padding-top: 4px;}
+    .phone-all .phone-border .photo-locator-icon {margin-top: 30px;}
+    .phone-all .phone-content {position: absolute;bottom: 10px;width: 100%;text-align: center;font-family: "times new roman";font-style: oblique;}
+    .phone-all .phone-content a {padding: 0 4%;color: #351611;}
+    .phone-all .photo-list {float: left;width: 50%;padding: .4%;}
+    .phone-all .photo-locator {margin-bottom: 50px;font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;}
+}
+
+

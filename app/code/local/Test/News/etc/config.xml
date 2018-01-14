@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Test_News>
+            <version>0.1.0</version>
+        </Test_News>
+    </modules>
+    <!-- add Frontend -->
+    <frontend>
+        <routers>
+<!-- 分配路由 -->
+            <news><!-- 组名也即是模块名称 -->
+                <use>standard</use>
+                <args>
+                    <module>Test_News</module>
+                    <frontName>news</frontName>
+                </args>
+            </news>
+        </routers>
+    </frontend>
+</config>

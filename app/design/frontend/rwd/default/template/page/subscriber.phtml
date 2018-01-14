@@ -1,0 +1,132 @@
+<?php
+$_countryList = Mage::getResourceModel('directory/country_collection')->loadData()->toOptionArray(false);
+?>
+
+<form action="<?php echo $this->getUrl('newsletter/subscriber/new/', array('_secure' => true));?>" method="post" id="newsletter-subscriber">
+<div class="form-holder">
+  <div class="entry">
+    <label for="firstname"><?php echo $this->__('First Name'); ?></label>
+    <div class="input-box">
+      <input type="text" name="subscriber_firstname" class="input-text ucfirst" placeholder="<?php echo $this->__('First Name');?>">
+    </div>
+  </div>
+
+  <div class="entry">
+    <label for="lastname"><?php echo $this->__('Last Name'); ?></label>
+    <div class="input-box">
+      <input type="text" name="subscriber_lastname" class="input-text ucfirst" placeholder="<?php echo $this->__('Last Name');?>">
+    </div>
+  </div>
+
+  <div class="entry">
+    <label for="email" class="required"><?php echo $this->__('Email Address'); ?></label>
+    <div class="input-box">
+      <input type="text" name="email" class="input-text required-entry validate-email" placeholder="<?php echo $this->__('Email Address') ?>">
+      <span class="required-input">*</span>
+    </div>
+  </div>
+
+  <div class="entry entry-dob">
+    <label for="dob"><?php echo $this->__('Date of Birth');?></label>
+
+    <div class="col col3 fl">
+      <select name="subscriber_dob_day" id="subscriber_dob_day" class="dob-select dob-select-day">
+        <option value=''><?php echo $this->__('Day');?> </option>
+        <?php for ($i = 1; $i <= 31; $i++): ?>
+        <option value="<?php echo $i; ?>"><?php echo str_pad($i, 2, '0', STR_PAD_LEFT); ?></option>
+        <?php endfor; ?>
+      </select>
+    </div>
+
+    <div class="col col3 fl">
+      <select name="subscriber_dob_month" id="subscriber_dob_month" class="dob-select dob-select-month">
+        <option value=''><?php echo $this->__('Month');?> </option>
+        <?php for ($i = 1; $i <= 12; $i++): ?>
+        <option value="<?php echo $i; ?>"><?php echo str_pad($i, 2, '0', STR_PAD_LEFT); ?></option>
+        <?php endfor; ?>
+      </select>
+    </div>
+
+    <div class="col col3 fl">
+      <select name="subscriber_dob_year" id="subscriber_dob_year" class="dob-select dob-select-year">
+        <option value=''><?php echo $this->__('Year');?> </option>
+        <?php for ($i = 2015; $i >= 1915; $i--): ?>
+        <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+        <?php endfor; ?>
+      </select>
+    </div>
+  </div>
+
+  <div class="entry select">
+    <label for="country"><?php echo $this->__('Country'); ?></label>
+    <select name="subscriber_country" id="subscriber_country">
+      <option value=''><?php echo $this->__('Please select country') ;?></option>
+      <?php array_shift($_countryList); ?>
+      <?php foreach ($_countryList as $_country): ?>
+      <option value="<?php echo $_country['value']; ?>"><?php echo $_country['label']; ?></option>
+      <?php endforeach; ?>
+    </select>
+  </div>
+
+  <div class="entry select">
+    <label for="languaeg"><?php echo $this->__('Language');?></label>
+    <select name="subscriber_language" id="subscriber_language">
+      <option value="en"><?php echo $this->__('English');?></option>
+      <option value="de"><?php echo $this->__('German');?></option>
+      <option value="nl"><?php echo $this->__('Dutch');?></option>
+      <option value="fr"><?php echo $this->__('French');?></option>
+    </select>
+  </div>
+
+<?php if(false): ?>
+<!--   <div class="entry radio inline">
+    <div class="option">
+      <input type="radio" name="subscriber_gender" id="subscriber_gender_male" value="M">
+      <label for="subscriber_gender_male"><?php echo $this->__('Male'); ?></label>
+    </div>
+    <div class="option">
+      <input type="radio" name="subscriber_gender" id="subscriber_gender_female" value="F" checked>
+      <label for="subscriber_gender_female"><?php echo $this->__('Female'); ?></label>
+    </div>
+  </div> -->
+<?php endif; ?>
+
+  <div class="btn-set">
+    <a href="#" class="up button btn-subscribe"><?php echo $this->__('Subscribe');?></a>
+    <!-- <button type="submit" title="Subscription" class="button hidden"><span><span><?php echo $this->__('Subscribe');?></span></span></button> -->
+  </div>
+  <div class="clear"></div>
+</div>
+
+</form>
+
+<link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_462185_7we4alj5lgsw0zfr.css">
+<script type="text/javascript" src="https://www.repeat-cashmere.com/skin/frontend/rwd/default/js/lib/jquery.customSelect.min.js"></script>
+<script type="text/javascript">
+(function($) {
+  $(function() {
+    var storeCode = '<?php echo Mage::app()->getStore()->getCode(); ?>';
+    $('#subscriber_language').val(storeCode);
+
+    var subscriberForm = new VarienForm('newsletter-subscriber');
+    var menuOption = '.cms-<?php echo Mage::getSingleton('cms/page')->getIdentifier(); ?>';
+    $(menuOption).addClass('on');
+
+    $('#subscriber_country').customSelect();
+    $('#subscriber_language').customSelect();
+    $('#subscriber_dob_day').customSelect();
+    $('#subscriber_dob_month').customSelect();
+    $('#subscriber_dob_year').customSelect();
+
+    var form = new VarienForm('newsletter-subscriber');
+    $('.btn-subscribe').on('click', function() {
+      if (form.validator.validate() === false) {
+        return false;
+      }
+
+      $(this).closest('form').submit();
+      return false;
+    });
+  });
+})(jQuery);
+</script>

@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Ecominfinity_Repeatgroup>
+            <version>0.2.1</version>
+        </Ecominfinity_Repeatgroup>
+    </modules>
+    <frontend>
+        <!-- <translate>
+            <modules>
+                <repeatgroup>
+                    <files>
+                        <default>Ecominfinity_Repeatgroup.csv</default>
+                    </files>
+                </repeatgroup>
+            </modules>
+        </translate>
+        <routers>
+            <repeatgroup>
+                <use>standard</use>
+                <args>
+                    <module>Ecominfinity_Repeatgroup</module>
+                    <frontName>repeatgroup</frontName>
+                </args>
+            </repeatgroup>
+        </routers>
+        <layout>
+            <updates>
+                <repeatgroup>
+                    <file>repeatgroup.xml</file>
+                </repeatgroup>
+            </updates>
+        </layout>
+        <product>
+            <collection>
+                <attributes>
+                    <repeat_eanbarcode/>
+                </attributes>
+            </collection>
+        </product> -->
+    </frontend>
+    <global>
+        <!-- <models>
+            <repeatgroup>
+                <class>Ecominfinity_Repeatgroup_Model</class>
+                <resourceModel>repeatgroup_mysql4</resourceModel>
+            </repeatgroup>
+            <repeatgroup_mysql4>
+                <class>Ecominfinity_Repeatgroup_Model_Mysql4</class>
+                <entities>
+                    <ei_coupon_mail>
+                        <table>ei_coupon_mail</table>
+                    </ei_coupon_mail>
+                    <ei_stock_qty>
+                        <table>ei_stock_qty</table>
+                    </ei_stock_qty>
+                </entities>
+            </repeatgroup_mysql4>
+        </models> -->
+        <!-- <resources>
+            <repeatgroup_setup>
+                <setup>
+                    <module>Ecominfinity_Repeatgroup</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </repeatgroup_setup>
+            <repeatgroup_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </repeatgroup_write>
+            <repeatgroup_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </repeatgroup_read>
+        </resources> -->
+        <!-- <blocks>
+            <repeatgroup>
+                <class>Ecominfinity_Repeatgroup_Block</class>
+            </repeatgroup>
+        </blocks> -->
+        <helpers>
+            <repeatgroup>
+                <class>Ecominfinity_Repeatgroup_Helper</class>
+            </repeatgroup>
+        </helpers>
+		<!-- <events>
+			<currency_display_options_forming>
+				<observers>
+					<chf_format_observer>
+						<type>singleton</type>
+						<class>Ecominfinity_Repeatgroup_Model_Observer</class>
+						<method>chfFormat</method>
+					</chf_format_observer>
+				</observers>
+			</currency_display_options_forming>
+<controller_action_layout_generate_blocks_after>
+                <observers>
+                    <hreflang_observer>
+                        <type>singleton</type>
+                        <class>Ecominfinity_Repeatgroup_Model_Observer</class>
+                        <method>hreflang</method>
+                    </hreflang_observer>
+                </observers>
+            </controller_action_layout_generate_blocks_after>
+			<catalog_controller_product_view>
+			  <observers>
+			    <reports>
+			      <type>disabled</type>
+			    </reports>
+			  </observers>
+			</catalog_controller_product_view>
+	<controller_action_predispatch>
+            <observers><log><type>disabled</type></log></observers>
+        </controller_action_predispatch>
+        <controller_action_postdispatch>
+            <observers><log><type>disabled</type></log></observers>
+        </controller_action_postdispatch>
+        <customer_login>
+            <observers><log><type>disabled</type></log></observers>
+        </customer_login>
+        <customer_logout>
+            <observers><log><type>disabled</type></log></observers>
+        </customer_logout>
+        <sales_quote_save_after>
+            <observers><log><type>disabled</type></log></observers>
+        </sales_quote_save_after>
+        <checkout_quote_destroy>
+            <observers><log><type>disabled</type></log></observers>
+        </checkout_quote_destroy>
+
+		</events> -->
+        <!-- <events>
+            <controller_action_layout_generate_blocks_before>
+                <observers>
+                    <layout_debug_observer>
+                        <type>singleton</type>
+                        <class>Ecominfinity_Repeatgroup_Model_Observer</class>
+                        <method>logCompiledLayout</method>
+                    </layout_debug_observer>
+                </observers>
+            </controller_action_layout_generate_blocks_before>
+        </events> -->
+    </global>
+    <!-- <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <repeatgroup before="Mage_Adminhtml">Ecominfinity_Repeatgroup_Adminhtml</repeatgroup>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin> -->
+</config>

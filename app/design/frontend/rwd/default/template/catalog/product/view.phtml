@@ -1,0 +1,599 @@
+<style type="text/css">
+    .product-view .product-img-box .product-name h1 {font-size: 16px;}
+    .product-shop .product-detail .color {padding-bottom: 40px; }
+    .product-view .product-detail {margin-bottom: 24px; }
+    .product-view .product-essential .bullets {border: none;padding: 0;}
+    .widget-new-products .products-grid .product-image {width: 100%;margin-left: 0;}
+    .widget-new-products .products-grid > li { margin-right: 0; }
+
+    .widget-new-products .detail-middle .products-grid > li:nth-child(even) { margin-right: 0; }
+    .add-to-cart-wrapper {display: none;}
+    .detail-middle {padding: 0 10px;}
+    .detail-middle .size-guide { display: block; margin-top: 6px;margin-bottom: 20px;}
+    .detail-middle .size-guide > i {font-size: 20px; }
+    .detail-middle .size-guide > span {padding-left: 10px;text-decoration: underline;}
+    .detail-middle .description {border-top: 1px solid #c7c6c6;}
+    .detail-middle .description-span {width: 100%;padding: 20px 0;display: inline-block;cursor: pointer; font-weight: bold; }
+    .detail-middle .down-up {transform: rotate(-90deg);display: block;transition: .3s ease-in-out all; font-weight: 200; }
+    .detail-middle .down-up.active {transform: rotate(0deg);}
+    .detail-middle .content-border {padding-bottom: 20px;display: none;}
+    .detail-middle .content-border.active {padding-bottom: 20px;display: block;}
+    .detail-middle .content-title {font-weight: 700;display: inherit;}
+    .detail-middle .description .content-border .content-list {padding: 10px 0 10px 20px;}
+
+    input[type=radio] { visibility: hidden; position: absolute; pointer-events: none; }
+    input[type=radio] + label:before { content: '\e705'; font-family: 'iconfont'; margin-right: 5px; }
+    input[type=radio]:checked + label:before { content: '\e6b1'; }
+
+    .table { width: 100%; font-size: 14px; font-weight: 200; }
+    .table .tr {width: 100%;background: #f8f3f0;margin-bottom: 10px;display: table;}
+    .table .tr:last-child { margin-bottom: 5px; }
+    .table .th, .table .td { padding: 10px 1.0416667%; line-height: 18px; display: table-cell; vertical-align: top; }
+    .table .th { padding: 0 1.0416667%; }
+
+    #size-info-container h2 { font-size: 24px; line-height: 24px; margin: 10px 0; }
+    #size-info-container .tabs .tab-header { border: none; }
+    #size-info-container .tabs .tab-header li { line-height: 20px; padding: 5px; border: none; display: block; border: 1px solid #351611; margin-bottom: 5px; }
+    #size-info-container .tabs .tab-header li.active { padding: 5px; }
+    #size-info-container .tabs .tab-header li a { text-decoration: underline; display: block; }
+
+    #size-info-container .table .thead { display: block; }
+    #size-info-container .table .thead .th { background: none !important; }
+    #size-info-container .table .thead .th:first-child { color: #351611; text-align: center; }
+    #size-info-container .table { font-size: 9px; }
+    #size-info-container .table .th { line-height: 12px; vertical-align: middle; }
+    #size-info-container .table .td { vertical-align: middle; line-height: 10px; padding: 5px; }
+    #size-info-container .table .thead small { display: none; }
+    #size-info-container .table .tbody small { display: block; }
+    #size-info-container .table .td:first-child { text-align: center; line-height: 10px; padding: 5px 0; color: #361712; }
+    #size-info-container .table .tr:nth-child(odd) .td:first-child { background: #e1d8d3 !important; }
+    #size-info-container .table .tr:nth-child(even) .td:first-child { background: #f2ebe6 !important; }
+    #size-info-container .table .td:first-child > div { width: 40%; }
+    #size-info-container .table .td:first-child small { width: 60%; }
+
+    #size-info-container {}
+    #size-info-container h2 { font-size: 30px; margin: 10px 0 20px; font-weight: 100; }
+    #size-info-container h3 { font-size: 18px; margin: 0 0 5px; font-weight: 200; }
+    .store-hk_en #size-info-container h3,
+    .store-hk_sc #size-info-container h3,
+    .store-hk_tc #size-info-container h3 { font-size: 14px; width: 100%; }
+    #size-info-container p { font-size: 12px;  }
+    .store-hk_en #size-info-container p,
+    .store-hk_sc #size-info-container p,
+    .store-hk_tc #size-info-container p { font-size: 14px; }
+    #size-info-container .tabs { margin-top: 5px; }
+    #size-info-container .tab-header { width: 100%; border-bottom: 1px solid #351611; }
+    #size-info-container .tab-header ul li { display: inline-block; padding: 5px 8px; border-width: 1px 1px 0; border-style: solid; border-color: #351611; }
+    #size-info-container .tab-header ul li.active { padding: 8px 8px 5px; background: #f2ebe6; }
+    #size-info-container .tab-header ul li a { text-decoration: none; }
+    #size-info-container .tab-content > div { display: none; margin-top: 10px; }
+    #size-info-container .tab-content > div.active { display: block; }
+    #size-info-container .illustration .lists { margin: 10px 0; font-size: 14px; }
+    #size-info-container .illustration .lists ul { list-style: decimal outside; margin-left: 0; }
+    #size-info-container .illustration .lists ul li { font-weight: bold; margin-bottom: 15px; margin-left: 20px; }
+    #size-info-container .illustration .lists ul li p { font-size: 14px; font-weight: normal; line-height: 20px; }
+    .cms-page-view #size-info-container .illustration .image { overflow: hidden; margin: 0; }
+    #size-info-container .illustration .image { overflow:hidden; margin: 0; }
+    #size-info-container .measurement { margin-bottom: 10px; }
+    #size-info-container .table { border: 1px solid #351611; display: none; }
+    #size-info-container .table.active { display: block; }
+    #size-info-container .table .tr { margin: 0; }
+    #size-info-container .table .th { font-weight: bold;  background: none !important; }
+    #size-info-container .table .tr:nth-child(odd) .th:nth-child(even) { background: #ebe1da; }
+    #size-info-container .table .tr:nth-child(odd) .th:nth-child(odd) { background: #f2ebe6; }
+    #size-info-container .table .tr:nth-child(odd) .td:nth-child(even) { background: #dbcfc8; }
+    #size-info-container .table .tr:nth-child(odd) .td:nth-child(odd) { background: #e1d8d3; }
+    #size-info-container .table .tr:nth-child(even) .td:nth-child(even) { background: #ebe1da; }
+    #size-info-container .table .tr:nth-child(even) .td:nth-child(odd) { background: #f2ebe6; }
+
+    #size-info-container .table .th:first-child { text-align: center; }
+    #size-info-container .table .td:first-child > div { float: left; width: 50%; text-align: right; }
+    #size-info-container .table .td:first-child small { float: right; width: 50%; text-align: left; }
+    #size-info-container .table .td:first-child { text-align: center; font-weight: bold; }
+    #size-info-container .table .th, #size-info-container .table .td { width: 16.666666667%; padding: 0 5px; text-align: center; }
+
+    #size-info-container .form-holder { margin-top: 10px; }
+    #size-info-container .form-holder .entry { margin-bottom: 0; }
+    #size-info-container .form-holder .entry input { float: left; width: 20px; margin-top: 2px; }
+    #size-info-container .form-holder .entry label { float: left; width: 40px; margin-right: 10px; }
+</style>
+
+
+
+<?php 
+$_helper = $this->helper('catalog/output'); 
+$_product = $this->getProduct(); 
+
+$_brand_name = $_product->getResource()->getAttribute('brand')->getFrontend()->getValue($_product);
+
+$_color = explode(';', $_product->getAttributeText('color'));
+$_color_code = (isset($_color[0])) ? $_color[0] : '';
+$_color_name = (isset($_color[1])) ? $_color[1] : '';
+
+$_quality = $_product->getResource()->getAttribute('quality')->getFrontend()->getValue($_product);
+
+$_attributes = [
+  'texture_knit', 'texture_woven', 'texture_shirt', 'neckline', 'sleeve_length', 
+  'start_end', 'closure_front', 'cutting', 'fit', 'pockets', 'leather_details',
+  'slit', 'shoulder_finishing', 'pattern', 'fancy_yarn',
+  'chest_width', 'length', 'care_info_short', 'model_wears', 'detail_1', 'detail_2',
+  'detail_3', 'detail_4', 'detail_5'
+];
+
+$_attributes_values = [];
+
+foreach ($_attributes as $_attribute) {
+  $_attributes_values[$_attribute] = $_product->getResource()->getAttribute($_attribute)->getFrontend()->getValue($_product);
+}
+$_base_sku = explode('-', $_product->getSku())[0];
+$_productCollection = Mage::getModel('catalog/product')->getCollection()
+                    ->setStoreId(Mage::app()->getStore()->getId())
+                    ->addAttributeToFilter('status', array('eq' => '1'))
+                    ->addAttributeToFilter('type_id', array('eq' => 'configurable'))
+                    ->addAttributeToFilter('sku', array('like' => '%'.$_base_sku.'%'));
+?>
+<script type="text/javascript">
+    var optionsPrice = new Product.OptionsPrice(<?php echo $this->getJsonConfig() ?>);
+</script>
+
+<div class="popout popout-up popout-size-guide">
+    <div class="popout-header clearfix">
+        <div class="button-done fr">
+            <button class="button popout-close header-right-done"><?php echo $this->__('Done') ?></button>
+        </div>
+        <h3 class="popout-title"><?php echo $this->__('Size Guide') ?></h3>
+    </div>
+    <div class="popout-content">
+        <div id="size-info-container" >
+            <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('size-info-female')->toHtml(); ?>
+        </div>
+    </div>
+</div>
+
+<div id="messages_product_view"><?php echo $this->getMessagesBlock()->toHtml() ?></div>
+<div class="product-view">
+    <div class="product-essential">
+        <form action="<?php echo $this->getSubmitUrl($_product, array('_secure' => $this->_isSecure())) ?>" method="post" id="product_addtocart_form"<?php if($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
+            <?php echo $this->getBlockHtml('formkey') ?>
+            <div class="no-display">
+                <input type="hidden" name="product" value="<?php echo $_product->getId() ?>" />
+                <input type="hidden" name="related_product" id="related-products-field" value="" />
+            </div>
+
+            <div class="product-img-box">
+                <div class="product-name">
+                    <h1><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></h1>
+                </div>
+                <?php echo $this->getChildHtml('media') ?>
+            </div>
+            <div class="brand"><?php //echo $_brand_name; ?></div>
+            <div class="product-shop">
+                <div class="product-name">
+                    <span class="h1"><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></span>
+                </div>
+                <div class="add-to-wishlist">
+                    <?php if ($this->helper('wishlist')->isAllow()) : ?>
+                        <a href="<?php echo $this->helper('guestwishlist')->getAddUrl($_product) ?>" onclick="productAddToCartForm.submitLight(this, this.href); return false;" class="link-wishlist">
+                            <i class="iconfont icon-my-wishlist"></i>
+                        </a>
+                    <?php endif; ?>
+                </div>
+
+                <div class="product-detail">
+                    <div class="price-info">
+                        <?php echo $this->getPriceHtml($_product); ?>
+                        <?php echo $this->getChildHtml('bundle_prices') ?>
+                        <?php echo $this->getTierPriceHtml() ?>
+                    </div>
+                    <div class="sku">
+                        <label><?php echo $this->__('Item ');?></label>
+                        <span><?php echo $_product->getSku(); ?></span>
+                    </div>
+                    <div class="color">
+                        <label><?php echo $this->__('Color ');?></label>
+                        <span><?php echo $_color_name; ?></span>
+                        <ul class="clearfix">
+                        <?php
+                            foreach ($_productCollection as $value) {
+                            $product = Mage::getModel('catalog/product')->loadByAttribute('sku', $value->getsku());
+                            $color = explode(';', $product->getAttributeText('color'));
+                            $color_code = (isset($color[0])) ? $color[0] : '';
+                            $color_name = (isset($color[1])) ? $color[1] : '';
+                            $url = Mage::getUrl().$product->getUrlPath();
+                        ?>
+                            <li class="<?php if($color_code == $_color_code) { echo 'active'; } ?>">
+                                <a href="<?php echo $url; ?>" style="background-color: <?php echo $color_code; ?>" title="<?php echo $color_name; ?>"><?php echo $color_name; ?></a>
+                            </li>
+                        <?php } ?>
+                        </ul>
+                    </div>
+                </div>
+                <?php if ($_product->isSaleable() && $this->hasOptions()):?>
+                    <?php echo $this->getChildChildHtml('container1', '', true, true) ?>
+                <?php endif;?>
+                <?php echo $this->getChildHtml('other');?>
+                <?php echo $this->getChildHtml('alert_urls') ?>
+
+                <?php if ($_product->getShortDescription()):?>
+                    <div class="short-description">
+                        <div class="std"><?php echo $_helper->productAttribute($_product, nl2br($_product->getShortDescription()), 'short_description') ?></div>
+                    </div>
+                <?php endif;?>
+
+                <div class="extra-info">
+                    <?php echo $this->getReviewsSummaryHtml($_product, 'default', false)?>
+                    <?php echo $this->getChildHtml('product_type_availability'); ?>
+                </div>
+            </div>
+
+            <div class="detail-middle">
+                <a class="size-guide" href="#size-guide">
+                    <i class="iconfont icon-clothes-rack"></i>
+                    <span>Size Guide</span>
+                </a>
+
+                <div class="description ">
+                    <span class="description-span">
+                        Description
+                        <i class="iconfont icon-down down-up fr"></i>
+                    </span>
+                    
+                    <div class="content-border">
+                        <div class="bullets product-shop">
+                            <span class="content-title"><?php echo $_brand_name ?></span>
+                            <div class="content-list">
+                                <ul>
+                                    <?php if ($_attributes_values['texture_knit'] !== NULL && strlen($_attributes_values['texture_knit']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['texture_knit']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['texture_woven'] !== NULL && strlen($_attributes_values['texture_woven']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['texture_woven']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['texture_shirt'] !== NULL && strlen($_attributes_values['texture_shirt']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['texture_shirt']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['neckline'] !== NULL && strlen($_attributes_values['neckline']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['neckline']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['sleeve_length'] !== NULL && strlen($_attributes_values['sleeve_length']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['sleeve_length']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['start_end'] !== NULL && strlen($_attributes_values['start_end']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['start_end']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['closure_front'] !== NULL && strlen($_attributes_values['closure_front']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['closure_front']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['cutting'] !== NULL && strlen($_attributes_values['cutting']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['cutting']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['fit'] !== NULL && strlen($_attributes_values['fit']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['fit']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['pockets'] !== NULL && strlen($_attributes_values['pockets']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['pockets']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['leather_details'] !== NULL && strlen($_attributes_values['leather_details']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['leather_details']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['slit'] !== NULL && strlen($_attributes_values['slit']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['slit']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['shoulder_finishing'] !== NULL && strlen($_attributes_values['shoulder_finishing']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['shoulder_finishing']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['pattern'] !== NULL && strlen($_attributes_values['pattern']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['pattern']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['fancy_yarn'] !== NULL && strlen($_attributes_values['fancy_yarn']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['fancy_yarn']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['detail_1'] !== NULL && strlen($_attributes_values['detail_1']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['detail_1']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['detail_2'] !== NULL && strlen($_attributes_values['detail_2']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['detail_2']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['detail_3'] !== NULL && strlen($_attributes_values['detail_3']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['detail_3']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['detail_4'] !== NULL && strlen($_attributes_values['detail_4']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['detail_4']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['detail_5'] !== NULL && strlen($_attributes_values['detail_5']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['detail_5']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['care_info_short'] !== NULL && strlen($_attributes_values['care_info_short']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['care_info_short']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_quality !== NULL && strlen($_quality) !== 0): ?>
+                                    <li><?php echo $_quality; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['fit'] !== NULL && strlen($_attributes_values['fit']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['fit']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['model_wears'] !== NULL && strlen($_attributes_values['model_wears']) !== 0): ?>
+                                    <li>
+                                        <?php echo trim($_attributes_values['model_wears']); ?><?php if (substr($_attributes_values['model_wears'], -1) != '.'): ?>. <?php endif; ?>
+                                        <a class="btn-size-info underline" href="#size-info-container"><?php echo $this->__('Size chart'); ?></a>
+                                    </li>
+                                    <?php endif; ?>
+
+                                    <?php if (($_attributes_values['chest_width'] !== NULL && strlen($_attributes_values['chest_width']) !== 0) || ($_attributes_values['length'] !== NULL && strlen($_attributes_values['length']) !== 0)): ?>
+                                    <li>
+                                        <?php if ($_attributes_values['chest_width'] !== NULL && strlen($_attributes_values['chest_width']) !== 0): ?>
+                                        <?php echo $this->__('Width'); ?>: <?php echo $_attributes_values['chest_width']; ?> cm, 
+                                        <?php endif; ?>
+                                        <?php if ($_attributes_values['length'] !== NULL && strlen($_attributes_values['length']) !== 0): ?>
+                                        <?php echo $this->__('Length'); ?>: <?php echo $_attributes_values['length']; ?> cm
+                                        <?php endif; ?>
+                                    </li>
+                                    <?php endif; ?>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="bullets product-shop">
+                            <span class="content-title">Size &amp; Fit</span>
+                            <div class="content-list">
+                                <ul>
+                                    <?php if ($_attributes_values['texture_knit'] !== NULL && strlen($_attributes_values['texture_knit']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['texture_knit']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['texture_woven'] !== NULL && strlen($_attributes_values['texture_woven']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['texture_woven']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['texture_shirt'] !== NULL && strlen($_attributes_values['texture_shirt']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['texture_shirt']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['detail_3'] !== NULL && strlen($_attributes_values['detail_3']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['detail_3']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['detail_4'] !== NULL && strlen($_attributes_values['detail_4']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['detail_4']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['detail_5'] !== NULL && strlen($_attributes_values['detail_5']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['detail_5']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['fit'] !== NULL && strlen($_attributes_values['fit']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['fit']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['model_wears'] !== NULL && strlen($_attributes_values['model_wears']) !== 0): ?>
+                                    <li>
+                                        <?php echo trim($_attributes_values['model_wears']); ?><?php if (substr($_attributes_values['model_wears'], -1) != '.'): ?>. <?php endif; ?>
+                                        <a class="btn-size-info underline" href="#size-info-container"><?php echo $this->__('Size chart'); ?></a>
+                                    </li>
+                                    <?php endif; ?>
+
+                                    <?php if (($_attributes_values['chest_width'] !== NULL && strlen($_attributes_values['chest_width']) !== 0) || ($_attributes_values['length'] !== NULL && strlen($_attributes_values['length']) !== 0)): ?>
+                                    <li>
+                                        <?php if ($_attributes_values['chest_width'] !== NULL && strlen($_attributes_values['chest_width']) !== 0): ?>
+                                        <?php echo $this->__('Width'); ?>: <?php echo $_attributes_values['chest_width']; ?> cm, 
+                                        <?php endif; ?>
+                                        <?php if ($_attributes_values['length'] !== NULL && strlen($_attributes_values['length']) !== 0): ?>
+                                        <?php echo $this->__('Length'); ?>: <?php echo $_attributes_values['length']; ?> cm
+                                        <?php endif; ?>
+                                    </li>
+                                    <?php endif; ?>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="bullets product-shop">
+                            <span class="content-title">Care Information</span>
+                            <div class="content-list">
+                                <ul>
+                                    <?php if ($_attributes_values['texture_woven'] !== NULL && strlen($_attributes_values['texture_woven']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['texture_woven']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['texture_shirt'] !== NULL && strlen($_attributes_values['texture_shirt']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['texture_shirt']; ?></li>
+                                    <?php endif; ?>                  
+
+                                    <?php if ($_attributes_values['sleeve_length'] !== NULL && strlen($_attributes_values['sleeve_length']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['sleeve_length']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['start_end'] !== NULL && strlen($_attributes_values['start_end']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['start_end']; ?></li>
+                                    <?php endif; ?>
+
+                                    <?php if ($_attributes_values['closure_front'] !== NULL && strlen($_attributes_values['closure_front']) !== 0): ?>
+                                    <li><?php echo $_attributes_values['closure_front']; ?></li>
+                                    <?php endif; ?>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('detail_shipping')->toHtml(); ?>
+
+                <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('detail_recommend_product')->toHtml(); ?>
+
+            </div>
+
+            <div class="add-to-cart-wrapper">
+                <?php echo $this->getChildHtml('product_type_data') ?>
+                <?php echo $this->getChildHtml('extrahint') ?>
+
+                <?php if (!$this->hasOptions()):?>
+                    <div class="add-to-box">
+                        <?php if($_product->isSaleable()): ?>
+                            <?php echo $this->getChildHtml('addtocart') ?>
+                            <?php if( $this->helper('wishlist')->isAllow() || $_compareUrl=$this->helper('catalog/product_compare')->getAddUrl($_product)): ?>
+                                <span class="or"><?php echo $this->__('OR') ?></span>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        <?php echo $this->getChildHtml('addto') ?>
+                        <?php echo $this->getChildHtml('sharing') ?>
+                    </div>
+                    <?php echo $this->getChildHtml('extra_buttons') ?>
+                <?php elseif (!$_product->isSaleable()): ?>
+                    <div class="add-to-box">
+                        <?php echo $this->getChildHtml('addto') ?>
+                        <?php echo $this->getChildHtml('sharing') ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <?php echo $this->getChildHtml('related_products') ?>
+
+            <div class="clearer"></div>
+            <?php if ($_product->isSaleable() && $this->hasOptions()):?>
+                <?php echo $this->getChildChildHtml('container2', '', true, true) ?>
+            <?php endif;?>
+        </form>
+        <script type="text/javascript">
+        //<![CDATA[
+            var productAddToCartForm = new VarienForm('product_addtocart_form');
+            productAddToCartForm.submit = function(button, url) {
+                if (this.validator.validate()) {
+                    var form = this.form;
+                    var oldUrl = form.action;
+
+                    if (url) {
+                       form.action = url;
+                    }
+                    var e = null;
+                    try {
+                        this.form.submit();
+                    } catch (e) {
+                    }
+                    this.form.action = oldUrl;
+                    if (e) {
+                        throw e;
+                    }
+
+                    if (button && button != 'undefined') {
+                        button.disabled = true;
+                    }
+                }
+            }.bind(productAddToCartForm);
+
+            productAddToCartForm.submitLight = function(button, url){
+                if(this.validator) {
+                    var nv = Validation.methods;
+                    delete Validation.methods['required-entry'];
+                    delete Validation.methods['validate-one-required'];
+                    delete Validation.methods['validate-one-required-by-name'];
+                    // Remove custom datetime validators
+                    for (var methodName in Validation.methods) {
+                        if (methodName.match(/^validate-datetime-.*/i)) {
+                            delete Validation.methods[methodName];
+                        }
+                    }
+
+                    if (this.validator.validate()) {
+                        if (url) {
+                            this.form.action = url;
+                        }
+                        this.form.submit();
+                    }
+                    Object.extend(Validation.methods, nv);
+                }
+            }.bind(productAddToCartForm);
+        //]]>
+        </script>
+    </div>
+
+
+    <div class="product-collateral toggle-content tabs">
+        <?php if ($detailedInfoGroup = $this->getChildGroup('detailed_info', 'getChildHtml')):?>
+            <dl id="collateral-tabs" class="collateral-tabs">
+                <?php foreach ($detailedInfoGroup as $alias => $html):?>
+                    <dt class="tab"><span><?php echo $this->escapeHtml($this->getChildData($alias, 'title')) ?></span></dt>
+                    <dd class="tab-container">
+                        <div class="tab-content"><?php echo $html ?></div>
+                    </dd>
+                <?php endforeach;?>
+            </dl>
+        <?php endif; ?>
+    </div>
+
+    <?php echo $this->getChildHtml('upsell_products') ?>
+    <?php // echo $this->getChildHtml('product_additional_data') ?>
+</div>
+
+
+<script type="text/javascript">
+    $j(function(){
+        var h = $j('h1').outerHeight();
+
+        setTimeout(function(){
+            if($j('.scroll-wrapper').scrollTop()===0){
+                $j('.scroll-wrapper').animate( { scrollTop: h },'1000','swing');
+            }
+        },2000);
+
+        $j('.size-guide').on('click',function(){
+            $j('.popout-size-guide').addClass('active');
+            $j('#page-overlay').addClass('active');
+            $j('.scroll-wrapper').addClass('no-scroll');
+            $j('.popout-size-guide .popout-content').scrollTop(0);
+        })
+
+        $j('.popout-size-guide .button-done').on('click',function(){
+            $j('.popout-size-guide').removeClass('active');
+            $j('.scroll-wrapper').removeClass('no-scroll');
+            $j('#page-overlay').removeClass('active');
+        })
+
+        $j('.tabs .tab-header').on('click', 'a', function() {
+          var name = $j(this).data('name');
+          $j('.tabs .tab-header li').removeClass('active');
+          $j(this).parent().addClass('active');
+          $j('.tabs .tab-content > div').removeClass('active');
+          $j('.tabs .tab-content').find('.tab-' + name).addClass('active');
+          return false;
+        });
+
+        $j('.tabs .unit-switch input').on('click', function() {
+          var $container = $j(this).closest('.measurement.active'),
+              v = $j(this).val();
+          $container.find('.table').removeClass('active');
+          $container.find('.table-' + v).addClass('active');
+        });
+
+
+
+        $j('.detail-middle .description-span').on('click', function() {
+            if (!$j(this).closest('.description').find('.content-border').hasClass('active')) {
+                $j(this).closest('.detail-middle').find('.active').removeClass('active');
+                var position = $j('.description').position().top;
+                $j('.scroll-wrapper').animate( { scrollTop: position },'1000','swing');
+            }
+            $j(this).closest('div').find('.content-border').toggleClass('active');
+            $j(this).closest('div').find('i').toggleClass('active');
+        });
+    });
+</script>

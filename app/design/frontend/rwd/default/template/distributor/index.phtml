@@ -1,0 +1,69 @@
+
+
+
+<link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_482167_a832mbny8nk7f1or.css">
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('css/react-table.css') ?>">
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('css/dashboard.css') ?>">
+<style type="text/css">
+  #header,
+  ..header-language-background,
+  .main > .links { display: none; }
+  body .main-container { width: 1500px; max-width: 1500px; padding: 0; }
+  img { width: 100% ; height: auto; }
+
+  .b2b-dashboard .banner {height: 170px;padding: 50px 20px;background: no-repeat center top #351611;color: #fff;}
+  .b2b-dashboard .store-info {font-size:18px;line-height: 70px;}
+  .b2b-dashboard .store-info h2 {padding-right: 40px;margin: 0;font-size: 30px;line-height: 70px;}
+  .b2b-dashboard .store-addr { font-size: 18px; }
+  .b2b-dashboard .store-addr span { margin-right:10px; }
+  .b2b-dashboard .store-addr address {  }
+
+</style>
+<script src="http://mockjs.com/dist/mock.js"></script>
+<script type="text/javascript">
+  window.url = 'http://test.com/';
+
+  Mock.mock('http://test.com/list', {
+    'list|80-200': [{
+        'id|+1': 100000010,
+        'time|+1': '@date("T")', // 时间戳
+        'name': '@first @last',
+        'status|1': ['0', '1'], //0 表示 'canceled'，1 表示 'pending'， 2 表示 ''
+        'amount|100-900.2': 123.98,
+    }]
+  });
+Mock.mock( 'http://test.com/order','post', {
+    'list|2-5': [{
+        'product': {
+
+        },
+        'status': 'Ordered',
+        'priginal_price': '',
+        'price': '',
+        'qty|1-3': 1,
+        'subtotal': '',
+        'tax': '',
+        'discount': /\d{5,10}/,
+        'total': '$300'
+    }]
+});
+</script>
+<div class="b2b-dashboard">
+    <div class="banner clearfix" style="background-image:url('<?php echo $this->getSkinUrl('images/b2b_dashboard_banner.png') ?>');>')">
+        <div class="fl store-info">
+            <h2 class="fl">Hello, <span>FENWICK</span></h2>
+            <span>ID: 125684</span>
+        </div>
+        <div class="fr store-addr">
+            <span class="fl">ADDRESS:</span>
+            <address class="fr">
+                Brent Cross Shopping Centre<br>
+                NW4 3FN Hendon, London<br>
+                United Kingdom
+            </address>
+        </div>
+    </div>
+    <div id="root"></div>
+</div>
+
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/dashboard.js') ?>"></script>

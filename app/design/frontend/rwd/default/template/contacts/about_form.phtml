@@ -1,0 +1,58 @@
+<form id="contactForm" action="<?php echo $this->getUrl('', ['_secure' => true]); ?>" method="POST">
+<div class="form-holder form-contact">
+    <div class="entry">
+        <label for="name"><?php echo $this->__('Name') ?></label>
+        <div class="input-box">
+            <input name="name" placeholder="<?php echo $this->__('Name'); ?>" class="input-text required-entry"  type="text" /> 
+            <input name="contactform" value="1" type="hidden" />
+            <span class="required-input">*</span>
+        </div>
+    </div>
+
+    <div class="entry">
+        <label for="email" class="required"><?php echo $this->__('Email Address') ?></label>
+        <div class="input-box">
+            <input name="email" id="email" placeholder="<?php echo $this->__('Email Address') ?>" class="input-text required-entry validate-email" type="email" />
+            <span class="required-input">*</span>
+        </div>
+    </div>
+
+    <div class="entry">
+        <label for="telephone"><?php echo $this->__('Phone') ?></label>
+        <div class="input-box">
+            <input name="telephone" id="telephone" placeholder="<?php echo $this->__('Phone') ?>" class="input-text" type="text" /> 
+            <input type="text" name="hideit" id="hideit" value="" style="display:none !important;" />
+        </div>
+    </div>
+
+    <div class="entry">
+        <label for="comment" class="required"><?php echo $this->__('Information / Question') ?></label>
+        <textarea name="comment" id="comment" placeholder="<?php echo $this->__('Information / Question') ?>" class="required-entry input-text" style="width: 100%;" rows="6"></textarea> 
+        <input name="hideit" id="hideit" value="" style="display:none !important;" type="text"/>
+    </div>
+
+    <div class="btn-set">
+        <input name="hideit" id="hideit" value="" style="display:none !important;" type="text"/>
+        <a class="up btn btn-dark btn-submit"><?php echo $this->__('Submit'); ?></a>
+        <!-- <button type="submit" title="<?php echo $this->__('Submit') ?>" class="button hidden"><span><span><?php echo $this->__('Submit') ?></span></span></button> -->
+    </div>
+
+    <div class="clear"></div>
+</div>
+</form>
+
+<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('contact-address')->toHtml() ?>
+
+<script type="text/javascript">
+var contactForm = new VarienForm('contactForm', true);
+(function($) {
+	$(function() {
+		$('.form-contact').on('click', '.btn-submit', function() {
+			if (contactForm.validator.validate() == true) {
+				$(this).closest('form').submit();
+			}
+			return false;
+		});
+	});
+})(jQuery);
+</script>

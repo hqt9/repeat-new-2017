@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+    <config>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <distributor_customer_groups translate="title" module="distributor">
+                                            <title>Distributor Customer Groups Section</title>
+                                            <sort_order>0</sort_order>
+                                        </distributor_customer_groups>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </config>

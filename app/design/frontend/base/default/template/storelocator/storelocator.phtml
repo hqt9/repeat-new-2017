@@ -1,0 +1,352 @@
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/lib/jquery.customSelect.min.js') ?>"></script>
+
+<?php $_store_code = Mage::app()->getStore()->getCode(); ?>
+<?php
+  $_default_country = [
+    'en' => 'NL', 'de' => 'DE', 'nl' => 'NL', 'fr' => 'FR',
+    'uk' => 'GB', 'us' => 'US', 'ch_de' => 'CH', 'ch_fr' => 'CH',
+    'hk_en' => 'NL', 'hk_sc' => 'NL', 'hk_tc' => 'NL',
+  ];
+  
+  $_app_root = array(
+    'en' => '/en/store_locator/',
+    'de' => '/de/shopsuche/',
+    'nl' => '/nl/store_locator/',
+    'fr' => '/fr/trouver-un-magasin.html/',
+    'uk' => '/uk/store_locator/',
+    'us' => '/us/store_locator/',
+    'ch_de' => '/ch_de/shopsuche/',
+    'ch_fr' => '/ch_fr/trouver-un-magasin.html/',
+  );
+?>
+
+<div class="relative">
+  <div class="scene store-listing active">
+    <h1><?php echo $this->__('Store locator'); ?></h1>
+    <div class="store-locator-img">
+      <img src="https://www.repeat-cashmere.com/media/wysiwyg/home/Flagship-stores.jpg" alt="">
+    </div>
+    <div class="main col2-left-layout">
+      <div class="store-locator">
+        <div class="col-left sidebar">
+          <div class="block block-find-nearest-store visible-phone">
+            <!-- <p style="margin-bottom: 10px;"><?php echo $this->__('Visit our store for personalized style advise.'); ?></p> -->
+            <div class="btn-set">
+              <a href="#" class="button btn-find-nearest-store up" style="display: block;">
+                <i class="iconfont icon-location">&nbsp;</i>
+                <?php echo $this->__('Find Your Nearest Store'); ?>
+                <i class="iconfont icon-right fr">&nbsp;</i>
+              </a>
+            </div>
+            <div class="clear"></div>
+          </div>
+          <div class="seperator"><span>Or</span></div>
+          <div class="block block-filter"></div>
+          <div class="block block-list">
+            
+          </div>
+        </div>
+        <div class="col-main content">
+          <div class="block block-store-detail hidden-phone">
+          </div>
+        </div>
+        <div class="clear"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scene store-info"></div>
+</div>
+
+<script type="text/javascript">
+<?php
+$_days = array(
+  $this->__('Sunday'), $this->__('Monday'), $this->__('Tuesday'),
+  $this->__('Wednesday'), $this->__('Thursday'), $this->__('Friday'),
+  $this->__('Saturday')
+);
+
+?>
+var approot = '<?php echo $_app_root[$_store_code]; ?>';
+var storeCode = '<?php echo $_default_country[$_store_code]; ?>';
+var storeView = '<?php echo $_store_code; ?>';
+var storeJSON = '<?php echo addslashes(Mage::helper('storelocator')->getStoreJson()); ?>';
+var countryJSON = '<?php echo addslashes(Mage::helper('storelocator')->getCountryJson()); ?>';
+var urls = jQuery.parseJSON('<?php echo addslashes(Mage::helper('storelocator')->getUrlJson()); ?>');
+var MAP_MARKER_ICON = '<?php echo $this->getSkinUrl('ecominfinity/storelocator/images/map_icon.png'); ?>';
+var MAP_CLOSE_ICON = '<?php echo $this->getSkinUrl('ecominfinity/storelocator/images/close.jpg'); ?>';
+var WEEKDAY_NAME = [
+  '<?php echo $this->__('Sunday'); ?>', '<?php echo $this->__('Monday'); ?>', '<?php echo $this->__('Tuesday'); ?>',
+  '<?php echo $this->__('Wednesday'); ?>', '<?php echo $this->__('Thursday'); ?>', '<?php echo $this->__('Friday'); ?>',
+  '<?php echo $this->__('Saturday'); ?>'
+];
+</script>
+
+<script type="text/template" id="tpl-store-filter">
+  <h2 class="title hidden-phone"><?php echo $this->__('Search by'); ?></h2>
+  <form action="" method="">
+  <div class="form-holder">
+      <div class="entry select hidden">
+          <label for="select-continent"><?php echo $this->__('Continent'); ?></label>
+          <select name="" id="select-continent">
+              <% _.each(continents, function(continent) { %>
+              <option value="<%= continent %>" <% if (continent == currentContinent) { %> selected <% } %>><%= continent %></option>
+              <% }) %>
+          </select>
+      </div>
+      <div class="entry select">
+          <label for="select-country"><?php echo $this->__('Country'); ?></label>
+          <select name="" id="select-country">
+              <% _.each(countries, function(country) { %>
+              <option value="<%= country.get('code') %>" <% if (country.get('code') == currentCountry) { %> selected <% } %>><%= country.get('name') %></option>
+              <% }) %>
+          </select>
+          <div class="icon-check"></div>
+      </div>
+      <div class="entry select">
+          <label for="select-city"><?php echo $this->__('City'); ?></label>
+          <select name="" id="select-city">
+              <% _.each(cities, function(city) { %>
+              <option value="<%= city %>" <% if (city == currentCity) { %> selected <% } %>><%= city %></option>
+              <% }) %>
+          </select>
+          <div class="icon-check"></div>
+      </div>
+      <div class="entry checkbox">
+          <input type="checkbox" name="" id="check-flagship" <% if (constrains.flagship) { %>checked <% } %>>
+          <label for="check-flagship"><?php echo $this->__('Flagship stores'); ?></label>
+      </div>
+      <div class="entry checkbox">
+          <input type="checkbox" name="" id="check-repeat" <% if (constrains.repeat) { %>checked <% } %>>
+          <label for="check-repeat"><?php echo $this->__('REPEAT stores'); ?></label>
+      </div>
+      <div class="entry checkbox">
+          <input type="checkbox" name="" id="check-retailers" <% if (constrains.retailers) { %>checked <% } %>>
+          <label for="check-retailers"><?php echo $this->__('Other retailers'); ?></label>
+      </div>
+      <div class="clear"></div>
+  </div>
+  </form>
+  <div class="btn-set">
+    <a class="button btn-next-page up show-results" href="#">
+    <i class="iconfont icon-search">&nbsp;</i>
+    <?php echo $this->__('View all stores'); ?>
+    <i class="iconfont icon-right fr">&nbsp;</i>
+    </a>
+  </div>
+</script>
+
+<script type="text/template" id="tpl-store-list">
+  <div class="next-page-header clearfix hidden-phone">
+      <a class="btn-back page-back fl" href="#">
+        <i class="iconfont icon-left"></i>
+      </a>
+      <h2 class="title"><?php echo $this->__('Store results'); ?></h2>
+  </div>
+  
+  <div class="store-list slider-up-down">
+      <div class="content">
+          <ul class="store-info">
+              <% _.each(stores, function(store) { %>
+              <li data-id="<%= store.id %>">
+                <div class="store-name"><%= store.get('name').toUpperCase() %></div>
+                <div class="btn-set distance">
+                  <a target="_blank" href="https://maps.google.com/?q=<%= store.get('address') %>" class="btn btn-dark btn-view-on-map up">
+                    <i class="iconfont icon-location">&nbsp</i>
+                    <%= distance(store) %> <?php echo $this->__('away'); ?>
+                    <i class="iconfont icon-right">&nbsp</i>
+                  </a>
+                </div>
+                <div class="details">
+                  <address>
+                      <%= store.get('address') %> <br>
+                      <%= store.get('zipcode') %> <%= store.get('city') %> <br>
+                      <%= store.get('country_name') %> <br>
+                      <% if (_.isNull(store.get('phone')) === false && store.get('phone').length > 0) { %>
+                      <a target="_blank" href="tel: <%= store.get('phone') %>"><?php echo $this->__('TEL:');?> <%= store.get('phone') %></a>
+                      <% } %>
+                  </address>
+                  <% if (store.get('can_collect_in_store') == 1 || store.get('can_return_in_store') == 1) { %>
+                  <ul>
+                    <% if (store.get('can_collect_in_store') == 1) { %>
+                    <li class="link ico ico-trunk"><span><?php echo $this->__('Collect-in-Store'); ?></span></li>
+                    <% } %>
+                    <% if (store.get('can_return_in_store') == 1) { %>
+                    <li class="link ico ico-timer"><span><?php echo $this->__('Return-in-Store'); ?></span></li>
+                    <% } %>
+                  </ul>
+                  <% } %>
+                  <div class="btn-set">
+                  <% if (store.get('is_flag_store') == 1) { %>
+                    <a href="#" class="btn btn-dark btn-store-info up hidden"><?php echo $this->__('Store Info'); ?></a>
+                    <a href="#" class="btn-mobile-detail"><?php echo $this->__('View opening times and contact details'); ?></a>
+                  <% } %>
+                  </div>
+
+                  <div class="hidden mobile-detail">
+                    <ul  style="margin-top:10px;">
+                      <% currentday = (new Date()).getDay() %>
+                      <% _.each(store.get('opening_hours'), function(day, idx) { %>
+                        <li style="<% if (idx == currentday) { %> font-weight: bold; <% } %>">
+                          <span style="width: 30%;display: block; float: left; font-size: 12px;">
+                            <%= WEEKDAY_NAME[idx] %>
+                          </span> 
+                          <% if (day[0] == '-1' && day[1] == '-1') { %>
+                          <?php echo $this->__('Closed'); ?>
+                          <% } else { %>
+                          <%= day[0] %> - <%= day[1] %>
+                          <% } %>
+                        </li>
+                      <% }) %>
+                    </ul>
+                  </div>
+                </div>
+              </li>
+              <% }) %>
+          </ul>
+      </div>
+      <div class="btn">
+        <a class="button page-back" href="#"><?php echo $this->__('Back'); ?></a>
+      </div>
+      <div class="control-set">
+          <a href="#" class="btn-scroll btn-scroll-up">&nbsp;</a>
+          <a href="#" class="btn-scroll btn-scroll-down">&nbsp;</a>
+      </div>
+      <div class="clear"></div>
+  </div>
+</script>
+
+<script type="text/template" id="tpl-store-marker">
+<div style="background-color: #311110; color: #e7ded6; width: 380px; <% if (store.get('is_flag_store') == 1 || store.get('is_repeat_store') == 1) { %> height: 235px; <% } else { %> height: 200px; <% } %> padding: 10px; font-weight: 200; font-size: 14px;">
+  <div style="float: left; width: 37%; ">
+    <img src="<%= store.get('main_image') %>" alt="">
+    <!--<a class="up" href="#" style="color: #e7ded6; float: right; line-height: 10px;"></a> -->
+  </div>
+  <div style="float: right; width: 57%; line-height: 18px;">
+    <div style="margin-bottom: 5px;">
+      <strong style="font-size: 15px; font-weight: 500;"><%= store.get('name').toUpperCase() %></strong>
+    </div>
+    <address>
+        <%= store.get('address') %><br>
+        <%= store.get('zipcode') %> <%= store.get('city') %><br>
+        <%= store.get('country_name') %><br>
+        <% if (_.isNull(store.get('phone')) === false && store.get('phone').length > 0) { %>
+        <a style="color: #e7ded6; margin-top: 5px; display: block;" target="_blank" href="tel: <%= store.get('phone') %>"><?php echo $this->__('TEL:');?> <%= store.get('phone') %></a>
+        <% } %>
+    </address>
+    <!--
+    <% if (store.get('can_collect_in_store') == 1 || store.get('can_return_in_store') == 1) { %>
+    <ul style="margin-top:10px;">
+      <% if (store.get('can_collect_in_store') == 1) { %>
+      <li>
+        <img src="<?php echo $this->getSkinUrl('ecominfinity/storelocator/images/usp_1-r.png'); ?>" style="width:23px;" alt="">
+        <span style="margin-left:5%;"><?php echo $this->__('Collect-in-Store'); ?></span>
+      </li>
+      <% } %>
+      <% if (store.get('can_return_in_store') == 1) { %>
+      <li>
+        <img src="<?php echo $this->getSkinUrl('ecominfinity/storelocator/images/usp_2-r.png'); ?>" style="width:23px;" alt="">
+        <span style="margin-left:5%;"><?php echo $this->__('Return-in-Store'); ?></span>
+      </li>
+      <% } %>
+    </ul>
+    <% } %>
+    -->
+    <% if (store.get('is_flag_store') == 1) { %>
+    <ul  style="margin-top:7px;">
+      <% currentday = (new Date()).getDay() %>
+      <% _.each(store.get('opening_hours'), function(day, idx) { %>
+		<li style="font-size: 11px; line-height: 12px; <% if (idx == currentday) { %> font-weight: bold; <% } %>"><span style="width: 40%;display: block; float: left; font-size: 12px;">
+		  <%= WEEKDAY_NAME[idx] %>: </span>
+          <% if (day[0] == '-1' && day[1] == '-1') { %>
+          <?php echo $this->__('Closed'); ?>
+          <% } else { %>
+          <%= day[0] %> - <%= day[1] %>
+          <% } %>
+        </li>
+      <% }) %>
+    </ul>
+	<% } %>
+
+    <% if (store.get('is_flag_store') == 1) { %>
+    <div data-id="<%= store.get('entity_id') %>" style="float: left; position: relative; ">
+		<a href="#" onclick="_event.trigger('popup:storeinfo', <%= store.get('entity_id') %>); return false;" class="btn-store-info" style="color:#311110; text-decoration:none;text-align: center;padding: 5px 25px;background-color:#efe6e0;font-weight:bold; text-transform: uppercase; width: 197px; position: absolute; top: 11px; left: 0; box-sizing: border-box; <?php if ($_store_code == 'de'): ?>font-size: 11px;<?php endif; ?>"><?php echo $this->__('Store Info'); ?></a>
+    </div>
+    <% } %>
+
+    <div style="position: absolute; bottom: 16px; left: 377px; width: 16px; height: 16px;">
+      <a target="_blank" href="<?php echo $this->getUrl('storelocator/index/print'); ?>id/<%= store.get('entity_id') %>" title="<?php echo $this->__('Print Address'); ?>"><img src="<?php echo $this->getSkinUrl('ecominfinity/storelocator/images/printer.png'); ?>" alt=""></a>
+    </div>
+  </div>
+</div>
+</script>
+
+<script type="text/template" id="tpl-store-detail">
+<div class="main col2-left-layout">
+  <div class="store-locator">
+    <div class="col col-left sidebar">
+      <div class="block block-contact-detail">
+          <h2 class="title"><?php echo $this->__('Contact details'); ?></h2>
+          <address>
+            <span style="font-weight: 500"><%= store.get('name').toUpperCase() %></span><br>
+            <%= store.get('address') %><br>
+            <%= store.get('zipcode') %> <%= store.get('city') %><br>
+            <%= store.get('country_name') %><br>
+            <% if (_.isNull(store.get('phone')) === false && store.get('phone').length > 0) { %>
+            <a target="_blank" href="tel: <%= store.get('phone') %>"><?php echo $this->__('TEL:');?> <%= store.get('phone') %></a>
+            <% } %>
+          </address>
+      </div>
+
+      <!-- Opening Time -->
+      <div class="block block-opening-times">
+          <h2 class="title"><?php echo $this->__('Opening hours'); ?></h2>
+          <ul>
+            <% _.each(store.get('opening_hours'), function(day, idx) { %>
+            <li>
+              <span><%= WEEKDAY_NAME[idx] %></span>
+              <% if (day[0] == '-1' && day[1] == '-1') { %>
+              <?php echo $this->__('Closed'); ?>
+              <% } else { %>
+              <%= day[0] %> - <%= day[1] %>
+              <% } %>
+            </li>
+            <% }); %>
+          </ul>
+      </div>
+
+      <!-- Store services -->
+      <div class="block block-store-services">
+          <h2 class="title"><?php echo $this->__('Store services'); ?></h2>
+          <% if (store.get('can_collect_in_store') == 1 || store.get('can_return_in_store') == 1) { %>
+          <ul>
+            <% if (store.get('can_collect_in_store') == 1) { %>
+            <li class="link ico ico-trunk"><span><?php echo $this->__('Collect-in-Store'); ?></span></li>
+            <% } %>
+            <% if (store.get('can_return_in_store') == 1) { %>
+            <li class="link ico ico-timer"><span><?php echo $this->__('Return-in-Store'); ?></span></li>
+            <% } %>
+          </ul>
+          <% } %>
+          <div class="map">
+              <div class="map-holder" style="height: 250px;"></div>
+              <form action="//maps.google.com/maps" method="get" target="_blank">
+                <input type="hidden" name="daddr" value="<%= store.get('address') %>">
+                <input type="hidden" name="hl" value="<?php echo $_store_code; ?>">
+                <input type="hidden" name="ll" value="<%= store.get('latitude') %>, <%= store.get('longitude') %>">
+                <a href="#" class="link ico ico-direction btn-direction"><?php echo $this->__('Direction'); ?></a>
+              </form>
+          </div>
+      </div>
+
+      <div class="block block-buttons">
+        <a class="btn btn-dark btn-back up btn-search-another-store" href="#"><?php echo $this->__('Search for another store'); ?></a>
+      </div>
+    </div>
+    <div class="col col-main content">
+      <%= store.get('content') %>
+    </div>
+    <div class="clear"></div>
+  </div>
+</div>
+</script>
